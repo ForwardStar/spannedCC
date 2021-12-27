@@ -51,20 +51,42 @@ void BaselineIndex::unioN(int ts, int u, int v, int t) {
     // Merge the smaller connected component into the larger one.
     if (Ssize[ts][mount_u][Ssize[ts][mount_u].size() - 1] < Ssize[ts][mount_v][Ssize[ts][mount_v].size() - 1]) {
         std::swap(u, v);
+        std::swap(mount_u, mount_v);
     }
     Ssize[ts][mount_u][Ssize[ts][mount_u].size() - 1] += Ssize[ts][mount_v][Ssize[ts][mount_v].size() - 1];
     Ssize[ts][mount_v][Ssize[ts][mount_v].size() - 1] = 0;
 
-    std::unordered_set<int>::iterator it;
+    std::vector<std::unordered_set<int>>::iterator vector_iterator;
+    std::unordered_set<int>::iterator unordered_set_iterator;
 
-    for (it = S[ts][mount_v][S[ts][mount_v].size() - 1].begin(); it != S[ts][mount_v][S[ts][mount_v].size() - 1].end(); it++) {
-        add(ts, *it, t);
-        L[ts][*it][L[ts][*it].size() - 1] = mount_u;
-        S[ts][mount_u][S[ts][mount_u].size() - 1].insert(*it);
+    for (vector_iterator = S[ts][mount_v].begin(); vector_iterator != S[ts][mount_v].end(); vector_iterator++) {
+        for (unordered_set_iterator = vector_iterator->begin(); unordered_set_iterator != vector_iterator->end(); unordered_set_iterator++) {
+            add(ts, *unordered_set_iterator, t);
+            L[ts][*unordered_set_iterator][L[ts][*unordered_set_iterator].size() - 1] = mount_u;
+            S[ts][mount_u][S[ts][mount_u].size() - 1].insert(*unordered_set_iterator);
+        }
     }
 
     S[ts][mount_v][S[ts][mount_v].size() - 1].clear();
     S[ts][mount_v][S[ts][mount_v].size() - 1].insert(-1);
+
+}
+
+int BaselineIndex::binarySearch(int ts, int u, int t) {
+
+    int l = 0;
+    int r = T[ts][u].size() - 1;
+    while (l < r) {
+        int mid = l + r + 1 >> 1;
+        if (T[ts][u][mid] <= t) {
+            l = mid;
+        }
+        else {
+            r = mid - 1;
+        }
+    }
+
+    return r;
 
 }
 
@@ -76,28 +98,22 @@ std::stringstream BaselineIndex::solve(TemporalGraph * Graph, int ts, int te) {
 
     Ans << "The spanned connected components in [" << ts << ", " << te << "] are:\n";
     for (it = Graph->vertex_set.begin(); it != Graph->vertex_set.end(); it++) {
-        int l = 0;
-        int r = T[ts][*it].size() - 1;
-        while (l < r) {
-            int mid = l + r + 1 >> 1;
-            if (T[ts][*it][mid] <= te) {
-                l = mid;
-            }
-            else {
-                r = mid - 1;
-            }
-        }
-        if (T[ts][*it][l] > te || r == -1) {
+        int idx = binarySearch(ts, *it, te);
+        if (idx == -1 || T[ts][*it][idx] > te) {
             Ans << "{ " << *it << " }\n";
             continue;
         }
-        if (Vis.find(find(ts, *it, l)) == Vis.end()) {
-            Vis.insert(find(ts, *it, l));
+        int mount_u = find(ts, *it, idx);
+        if (Vis.find(mount_u) == Vis.end()) {
+            Vis.insert(mount_u);
+            idx = binarySearch(ts, mount_u, te);
+
             std::set<int> CurrentCC;
             std::unordered_set<int>::iterator unordered_set_iterator;
             std::set<int>::iterator set_iterator;
-            for (l; l >= 0; --l) {
-                for (unordered_set_iterator = S[ts][*it][l].begin(); unordered_set_iterator != S[ts][*it][l].end(); unordered_set_iterator++) {
+
+            for (idx; idx >= 0; --idx) {
+                for (unordered_set_iterator = S[ts][mount_u][idx].begin(); unordered_set_iterator != S[ts][mount_u][idx].end(); unordered_set_iterator++) {
                     if (*unordered_set_iterator != -1) {
                         CurrentCC.insert(*unordered_set_iterator);
                     }

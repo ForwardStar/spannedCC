@@ -44,11 +44,6 @@ void TemporalGraph::addEdge(int u, int v, int t) {
     if (vertex_set.find(v) == vertex_set.end()) {
         vertex_set.insert(v);
     }
-    while (temporal_edge.size() < t + 1) {
-        temporal_edge.push_back(std::vector<std::pair<int, int>>());
-    }
-    tmax = std::max(tmax, t);
-    temporal_edge[t].push_back(std::make_pair(u, v));
     if (head_edge.count(u)) {
         head_edge[u] = new Edge(v, t, head_edge[u]);
     }
@@ -65,6 +60,11 @@ TemporalGraph::TemporalGraph(char *graph_file, char *graph_type) {
 
     is_directed = graph_type == "Directed";
     while (fin >> u >> v >> t) {
+        while (temporal_edge.size() < t + 1) {
+            temporal_edge.push_back(std::vector<std::pair<int, int>>());
+        }
+        tmax = std::max(tmax, t);
+        temporal_edge[t].push_back(std::make_pair(u, v));
         addEdge(u, v, t);
         if (!is_directed) {
             addEdge(v, u, t);

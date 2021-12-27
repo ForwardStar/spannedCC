@@ -14,6 +14,9 @@ class BaselineIndex {
         // unioN(ts, u, v, t): perform the union operation on u and v at time t with start time ts.
         void unioN(int ts, int u, int v, int t);
 
+        // binarySearch(ts, u, t): perform the binary search on u to find the exact vector index of time t with start time ts.
+        int binarySearch(int ts, int u, int t);
+
     public:
 
         // Ssize[ts][u][id]: the size of connected component at u at time t(ts, u, id) with start time ts, calculated by prefix sum;
