@@ -1,12 +1,7 @@
 #ifndef temporal_graph
 #define temporal_graph
 
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <vector>
-#include <map>
-#include <set>
+#include "commonfunctions.h"
 
 class TemporalGraph {
        

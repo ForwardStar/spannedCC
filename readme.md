@@ -4,13 +4,24 @@ A fast, elegant index structure to find all spanned connected components in a te
 
 How to use it:
 
-- Write your graph data into ``graph.txt``; it contains info about all edges with the format $(u,v,t)$;
+- Write your graph data into ``graph.txt``; it contains info about all edges with the format $(u,v,t)$; you can use the ``graph-gen.sh`` to generate graph data automatically:
+
+```sh
+sh graph-gen.sh
+```
+
+- Write your query data into ``query.txt``; it contains info about queries with the format $[t_s,t_e]$; you can use ``query-gen.sh`` to generate query data automatically:
+
+```sh
+sh query-gen.sh
+```
+
 - Run the following command:
 
 ```sh
-sh run.sh $1 $2
+sh run.sh $1
 ```
 
-where ``$1`` is "Directed" or "Undirected", indicating the graph type; ``$2`` is "Online" or "Baseline", indicating which solution to use.
+where ``$1`` is "Online" or "Baseline", indicating which solution to use.
 
 The output is in the file ``output.txt``.

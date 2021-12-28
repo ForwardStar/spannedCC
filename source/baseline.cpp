@@ -1,3 +1,4 @@
+#include <iomanip>
 #include <sstream>
 #include "baseline.h"
 
@@ -138,7 +139,9 @@ BaselineIndex::BaselineIndex(TemporalGraph * Graph) {
 
     std::unordered_set<int>::iterator it;
     
+    int start_time = time(NULL);
     for (int ts = 0; ts <= Graph->tmax; ++ts) {
+        putProcess(double(ts) / Graph->tmax, difftime(time(NULL), start_time));
         T.push_back(std::map<int, std::vector<int>>());
         L.push_back(std::map<int, std::vector<int>>());
         S.push_back(std::map<int, std::vector<std::unordered_set<int>>>());
@@ -153,24 +156,27 @@ BaselineIndex::BaselineIndex(TemporalGraph * Graph) {
 
 }
 
-void baseline(TemporalGraph * Graph, char * query_file, char * output_file) {
+void baseline(BaselineIndex * Index, TemporalGraph * Graph, char * query_file, char * output_file) {
 
     int ts, te, tmax;
+    int query_num = 0;
     std::ifstream fin(query_file);
     std::ofstream fout(output_file);
 
     while (fin >> ts >> te) {
         tmax = std::max(tmax, te);
+        ++query_num;
     }
-
-    BaselineIndex * idx = new BaselineIndex(Graph);
 
     fin = std::ifstream(query_file);
 
+    int i = 0;
+    int start_time = time(NULL);
     while (fin >> ts >> te) {
-        fout << idx->solve(Graph, ts, std::min(te, Graph->tmax)).str() << std::endl;
+        putProcess(double(++i) / query_num, difftime(time(NULL), start_time));
+        fout << Index->solve(Graph, ts, std::min(te, Graph->tmax)).str() << std::endl;
     }
 
-    delete idx;
+    std::cout << "Average (per query): " << timeFormatting(difftime(time(NULL), start_time) / query_num).str() << std::endl;
 
 }

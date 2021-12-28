@@ -64,12 +64,15 @@ TemporalGraph::TemporalGraph(char *graph_file, char *graph_type) {
             temporal_edge.push_back(std::vector<std::pair<int, int>>());
         }
         tmax = std::max(tmax, t);
+        ++m;
         temporal_edge[t].push_back(std::make_pair(u, v));
         addEdge(u, v, t);
         if (!is_directed) {
             addEdge(v, u, t);
         }
     }
+
+    n = vertex_set.size();
 
 }
 

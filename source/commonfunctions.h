@@ -1,0 +1,21 @@
+#ifndef commonfunctions
+#define commonfunctions
+
+#include <ctime>
+#include <iomanip>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <cstring>
+#include <vector>
+#include <map>
+#include <set>
+#include <unordered_set>
+#include <queue>
+
+void putProcess(double procedure, int time_used);
+
+std::stringstream timeFormatting(int seconds);
+
+#endif

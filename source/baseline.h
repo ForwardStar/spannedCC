@@ -1,4 +1,4 @@
-#include <unordered_set>
+#include "commonfunctions.h"
 #include "temporal_graph.h"
 
 class BaselineIndex {
@@ -35,4 +35,4 @@ class BaselineIndex {
 
 };
 
-void baseline(TemporalGraph * Graph, char * query_file, char * output_file);
+void baseline(BaselineIndex * Index, TemporalGraph * Graph, char * query_file, char * output_file);
