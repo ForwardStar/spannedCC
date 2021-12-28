@@ -108,13 +108,13 @@ def normalize(filename):
     open(filename, "w").write(text)
 
 if __name__ == "__main__":
-    # Download datasets
+    # download datasets
     if os.path.isdir("datasets") is False or len(os.listdir("datasets")) == 0:
         if os.path.isdir("datasets") is False:
             os.mkdir("datasets")
         download("http://konect.cc/files/download.tsv.dblp_coauthor.tar.bz2", "datasets/download.tsv.dblp_coauthor.tar.bz2")
 
-    # Extract all datasets
+    # extract all datasets
     waiting_message = "Extracting datasets..."
     is_finished = False
     thread_extract_datasets = threading.Thread(target=showProcess)
@@ -128,22 +128,30 @@ if __name__ == "__main__":
     is_finished = True
     thread_extract_datasets.join()
 
+    # clear cache
+    if os.path.isfile("model"):
+        os.remove("model")
+
     # select a target graph dataset
-    file_ls = os.listdir('datasets')
-    count = 0
+    file_ls = os.listdir("datasets")
+    count = 1
     print("Datasets:")
+    print("0. naive")
     for file in file_ls:
         print(str(count) + ".", file)
         count += 1
-    user_input = input("Select a graph dataset (0-" + str(len(file_ls) - 1) + "): ")
+    user_input = input("Select a graph dataset (0-" + str(count - 1) + "): ")
 
     # move data file
-    if user_input.strip() in [str(i) for i in range(len(file_ls))]:
+    if user_input.strip() in [str(i) for i in range(count)]:
         waiting_message = 'Copying dataset to "graph.txt"...'
         is_finished = False
         thread_move_data_file = threading.Thread(target=showProcess)
         thread_move_data_file.start()
-        move_data_file(file_ls[int(user_input)], "graph.txt")
+        if int(user_input) == 0:
+            open("graph.txt", "w").write("0 2 1\n0 4 1\n0 5 2\n1 4 2\n1 5 3\n2 3 3\n2 4 4\n1 2 5\n4 5 5")
+        else:
+            move_data_file(file_ls[int(user_input) + 1], "graph.txt")
         is_finished = True
         thread_move_data_file.join()
     else:
@@ -155,6 +163,7 @@ if __name__ == "__main__":
     is_finished = False
     thread_normalize = threading.Thread(target=showProcess)
     thread_normalize.start()
-    normalize("graph.txt")
+    if int(user_input) != 0:
+        normalize("graph.txt")
     is_finished = True
     thread_normalize.join()
