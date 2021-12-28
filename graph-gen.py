@@ -17,7 +17,7 @@ def download(url, path):
         from pathlib import Path
         from tqdm import tqdm
     from urllib.request import urlopen, Request
-    print("Downloading datasets...")
+    print("Fetching from", url + "...")
     path = Path(path)
     blocksize = 1024 * 8
     blocknum = 0
@@ -110,9 +110,13 @@ def normalize(filename):
 if __name__ == "__main__":
     # download datasets
     if os.path.isdir("datasets") is False or len(os.listdir("datasets")) == 0:
+        print("Downloading datasets...")
         if os.path.isdir("datasets") is False:
             os.mkdir("datasets")
         download("http://konect.cc/files/download.tsv.dblp_coauthor.tar.bz2", "datasets/download.tsv.dblp_coauthor.tar.bz2")
+        download("http://konect.cc/files/download.tsv.contact.tar.bz2", "datasets/download.tsv.contact.tar.bz2")
+        download("http://konect.cc/files/download.tsv.sociopatterns-hypertext.tar.bz2", "datasets/download.tsv.sociopatterns-hypertext.tar.bz2")
+        download("http://konect.cc/files/download.tsv.mit.tar.bz2", "datasets/download.tsv.mit.tar.bz2")
 
     # extract all datasets
     waiting_message = "Extracting datasets..."
@@ -151,7 +155,7 @@ if __name__ == "__main__":
         if int(user_input) == 0:
             open("graph.txt", "w").write("0 2 1\n0 4 1\n0 5 2\n1 4 2\n1 5 3\n2 3 3\n2 4 4\n1 2 5\n4 5 5")
         else:
-            move_data_file(file_ls[int(user_input) + 1], "graph.txt")
+            move_data_file(file_ls[int(user_input) - 1], "graph.txt")
         is_finished = True
         thread_move_data_file.join()
     else:
