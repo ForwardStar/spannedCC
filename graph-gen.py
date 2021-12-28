@@ -7,11 +7,18 @@ headers = {'User-Agent':'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.
 
 def download(url, path):
     try:
+        from pathlib import Path
         from tqdm import tqdm
     except:
+        print("Installing dependencies...")
         from pip._internal import main
-        os.system(f'pip3 install tqdm')
+        main(['install', 'pathlib'])
+        main(['install', 'tqdm'])
+        from pathlib import Path
+        from tqdm import tqdm
     from urllib.request import urlopen, Request
+    print("Downloading datasets...")
+    path = Path(path)
     blocksize = 1024 * 8
     blocknum = 0
     retry_times = 0
@@ -101,22 +108,24 @@ def normalize(filename):
     open(filename, "w").write(text)
 
 if __name__ == "__main__":
-    '''
     # Download datasets
     if os.path.isdir("datasets") is False or len(os.listdir("datasets")) == 0:
         if os.path.isdir("datasets") is False:
             os.mkdir("datasets")
-        print("Downloading datasets...")
         download("http://konect.cc/files/download.tsv.dblp_coauthor.tar.bz2", "datasets/download.tsv.dblp_coauthor.tar.bz2")
-    '''
 
     # Extract all datasets
+    waiting_message = "Extracting datasets..."
+    is_finished = False
+    thread_extract_datasets = threading.Thread(target=showProcess)
+    thread_extract_datasets.start()
     file_ls = os.listdir("datasets")
     for file in file_ls:
         if file.endswith(".tar.bz2"):
             archive = tarfile.open(os.path.join("datasets", file), "r:bz2")
             archive.extractall("datasets")
             os.remove(os.path.join("datasets", file))
+    thread_extract_datasets.join()
 
     # select a target graph dataset
     file_ls = os.listdir('datasets')
