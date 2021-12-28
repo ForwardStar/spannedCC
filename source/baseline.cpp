@@ -1,5 +1,3 @@
-#include <iomanip>
-#include <sstream>
 #include "baseline.h"
 
 bool BaselineIndex::add(int ts, int u, int t) {
