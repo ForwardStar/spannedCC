@@ -34,11 +34,20 @@ int main(int argc, char * argv[]) {
 
     if (std::strcmp(argv[4], "Baseline") == 0) {
         std::cout << "Running baseline..." << std::endl;
-        std::cout << "Constructing the index structure..." << std::endl;
-        int index_construction_start_time = time(NULL);
-        BaselineIndex Index = BaselineIndex(Graph);
-        int index_construction_end_time = time(NULL);
-        std::cout << "Index construction completed in " << timeFormatting(difftime(index_construction_end_time, index_construction_start_time)).str() << std::endl;
+        BaselineIndex Index;
+        std::ifstream is((char *)"model");
+        if (is.good()) {
+            Index.deserialize(is);
+        }
+        else {
+            std::cout << "Constructing the index structure..." << std::endl;
+            int index_construction_start_time = time(NULL);
+            Index = BaselineIndex(Graph);
+            int index_construction_end_time = time(NULL);
+            std::cout << "Index construction completed in " << timeFormatting(difftime(index_construction_end_time, index_construction_start_time)).str() << std::endl;
+            std::ofstream os((char *)"model");
+            Index.serialize(os);
+        }
         std::cout << "Solving queries..." << std::endl;
         int query_start_time = time(NULL);
         baseline(&Index, Graph, argv[2], argv[3]);

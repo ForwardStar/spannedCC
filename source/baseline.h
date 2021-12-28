@@ -30,8 +30,12 @@ class BaselineIndex {
 
         std::stringstream solve(TemporalGraph * Graph, int ts, int te);
 
+        BaselineIndex() {}
         BaselineIndex(TemporalGraph * Graph);
         ~BaselineIndex() {}
+        
+        void serialize(std::ofstream & oa);
+        void deserialize(std::ifstream & ia);
 
 };
 

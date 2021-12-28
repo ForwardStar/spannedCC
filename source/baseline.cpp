@@ -154,6 +154,178 @@ BaselineIndex::BaselineIndex(TemporalGraph * Graph) {
 
 }
 
+void BaselineIndex::serialize(std::ofstream & os) {
+    
+    // Serialize Ssize
+    os << "Serialized Ssize:" << std::endl;
+    std::vector<std::map<int, std::vector<int>>>::iterator it_Ssize;
+    for (it_Ssize = Ssize.begin(); it_Ssize != Ssize.end(); it_Ssize++) {
+        if (it_Ssize->size() == 0) {
+            continue;
+        }
+        os << std::endl;
+        std::map<int, std::vector<int>>::iterator it1;
+        for (it1 = it_Ssize->begin(); it1 != it_Ssize->end(); it1++) {
+            os << it1->first << " ";
+            std::vector<int>::iterator it2;
+            for (it2 = it1->second.begin(); it2 != it1->second.end(); it2++) {
+                os << *it2 << " ";
+            }
+            os << std::endl;
+        }
+    }
+
+    // Serialize S
+    os << "Serialized S:" << std::endl;
+    std::vector<std::map<int, std::vector<std::unordered_set<int>>>>::iterator it_S;
+    for (it_S = S.begin(); it_S != S.end(); it_S++) {
+        if (it_S->size() == 0) {
+            continue;
+        }
+        std::map<int, std::vector<std::unordered_set<int>>>::iterator it1;
+        for (it1 = it_S->begin(); it1 != it_S->end(); it1++) {
+            os << it1->first << std::endl;
+            std::vector<std::unordered_set<int>>::iterator it2;
+            for (it2 = it1->second.begin(); it2 != it1->second.end(); it2++) {
+                if (it2->size() == 0) {
+                    continue;
+                }
+                std::unordered_set<int>::iterator it3;
+                for (it3 = it2->begin(); it3 != it2->end(); it3++) {
+                    os << *it3 << " ";
+                }
+                os << std::endl;
+            }
+            os << std::endl;
+        }
+    }
+
+    // Serialize L
+    os << "Serialized L:" << std::endl;
+    std::vector<std::map<int, std::vector<int>>>::iterator it_L;
+    for (it_L = L.begin(); it_L != L.end(); it_L++) {
+        if (it_L->size() == 0) {
+            continue;
+        }
+        os << std::endl;
+        std::map<int, std::vector<int>>::iterator it1;
+        for (it1 = it_L->begin(); it1 != it_L->end(); it1++) {
+            os << it1->first << " ";
+            std::vector<int>::iterator it2;
+            for (it2 = it1->second.begin(); it2 != it1->second.end(); it2++) {
+                os << *it2 << " ";
+            }
+            os << std::endl;
+        }
+    }
+
+    // Serialize T
+    os << "Serialized T:" << std::endl;
+    std::vector<std::map<int, std::vector<int>>>::iterator it_T;
+    for (it_T = T.begin(); it_T != T.end(); it_T++) {
+        if (it_T->size() == 0) {
+            continue;
+        }
+        os << std::endl;
+        std::map<int, std::vector<int>>::iterator it1;
+        for (it1 = it_T->begin(); it1 != it_T->end(); it1++) {
+            os << it1->first << " ";
+            std::vector<int>::iterator it2;
+            for (it2 = it1->second.begin(); it2 != it1->second.end(); it2++) {
+                os << *it2 << " ";
+            }
+            os << std::endl;
+        }
+    }
+
+}
+
+void BaselineIndex::deserialize(std::ifstream & is) {
+
+    std::string line;
+    
+    // Deserialize Ssize
+    std::getline(is, line);
+    while (std::getline(is, line)) {
+        if (line[0] == 'S' && line[line.size() - 2] == 'S') {
+            break;
+        }
+        if (line.empty()) {
+            Ssize.push_back(std::map<int, std::vector<int>>());
+            continue;
+        }
+        std::stringstream ssline(line);
+        int vertex;
+        ssline >> vertex;
+        Ssize[Ssize.size() - 1][vertex] = std::vector<int>();
+        int size_element;
+        while (ssline >> size_element) {
+            Ssize[Ssize.size() - 1][vertex].push_back(size_element);
+        }
+    }
+
+    // Deserialize S
+    while (std::getline(is, line)) {
+        if (line[0] == 'S') {
+            break;
+        }
+        std::stringstream ssline(line);
+        int vertex;
+        ssline >> vertex;
+        if (S.size() == 0 || S[S.size() - 1].count(vertex) > 0) {
+            S.push_back(std::map<int, std::vector<std::unordered_set<int>>>());
+        }
+        S[S.size() - 1][vertex] = std::vector<std::unordered_set<int>>();
+        while (std::getline(is, line)) {
+            if (line.empty()) {
+                break;
+            }
+            ssline = std::stringstream(line);
+            S[S.size() - 1][vertex].push_back(std::unordered_set<int>());
+            int cc_element;
+            while (ssline >> cc_element) {
+                S[S.size() - 1][vertex][S[S.size() - 1][vertex].size() - 1].insert(cc_element);
+            }
+        }
+    }
+
+    // Deserialize L
+    while (std::getline(is, line)) {
+        if (line[0] == 'S') {
+            break;
+        }
+        if (line.empty()) {
+            L.push_back(std::map<int, std::vector<int>>());
+            continue;
+        }
+        std::stringstream ssline(line);
+        int vertex;
+        ssline >> vertex;
+        L[L.size() - 1][vertex] = std::vector<int>();
+        int label_element;
+        while (ssline >> label_element) {
+            L[L.size() - 1][vertex].push_back(label_element);
+        }
+    }
+
+    // Deserialize T
+    while (std::getline(is, line)) {
+        if (line.empty()) {
+            T.push_back(std::map<int, std::vector<int>>());
+            continue;
+        }
+        std::stringstream ssline(line);
+        int vertex;
+        ssline >> vertex;
+        T[T.size() - 1][vertex] = std::vector<int>();
+        int time_element;
+        while (ssline >> time_element) {
+            T[T.size() - 1][vertex].push_back(time_element);
+        }
+    }
+
+}
+
 void baseline(BaselineIndex * Index, TemporalGraph * Graph, char * query_file, char * output_file) {
 
     int ts, te, tmax;
