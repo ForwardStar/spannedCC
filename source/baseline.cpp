@@ -93,6 +93,7 @@ std::stringstream BaselineIndex::solve(TemporalGraph * Graph, int ts, int te) {
     
     std::stringstream Ans;
     std::unordered_set<int> Vis;
+    std::set<int> CurrentCC;
     std::set<int>::iterator it;
 
     Ans << "The spanned connected components in [" << ts << ", " << te << "] are:\n";
@@ -107,7 +108,7 @@ std::stringstream BaselineIndex::solve(TemporalGraph * Graph, int ts, int te) {
             Vis.insert(mount_u);
             idx = binarySearch(ts, mount_u, te);
 
-            std::set<int> CurrentCC;
+            CurrentCC.clear();
             std::unordered_set<int>::iterator unordered_set_iterator;
             std::set<int>::iterator set_iterator;
 

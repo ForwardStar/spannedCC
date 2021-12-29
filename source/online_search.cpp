@@ -5,6 +5,7 @@ std::stringstream onlineSearch(TemporalGraph * Graph, int ts, int te) {
 
     std::stringstream Ans;
     std::unordered_set<int> Vis;
+    std::set<int> CurrentCC;
     std::set<int>::iterator it;
     std::queue<int> Q;
     
@@ -12,7 +13,7 @@ std::stringstream onlineSearch(TemporalGraph * Graph, int ts, int te) {
     for (it = Graph->vertex_set.begin(); it != Graph->vertex_set.end(); it++) {
         if (Vis.find(*it) == Vis.end()) {
             Q.push(*it);
-            std::set<int> CurrentCC;
+            CurrentCC.clear();
             CurrentCC.insert(*it);
             while (!Q.empty()) {
                 int u = Q.front();
