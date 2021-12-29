@@ -4,13 +4,13 @@ A fast, elegant index structure to find all spanned connected components in a te
 
 How to use it:
 
-- Write your graph data into ``graph.txt``; it contains info about all edges with the format $(u,v,t)$; you can use the ``graph-gen.sh`` to generate graph data automatically:
+- Write your graph data into ``graph.txt``; it contains info about all edges with the format (u, v, t); you can use the ``graph-gen.sh`` to generate graph data automatically:
 
 ```sh
 sh graph-gen.sh
 ```
 
-- Write your query data into ``query.txt``; it contains info about queries with the format $[t_s,t_e]$; you can use ``query-gen.sh`` to generate query data automatically:
+- Write your query data into ``query.txt``; it contains info about queries with the format [ts, te]; you can use ``query-gen.sh`` to generate query data automatically:
 
 ```sh
 sh query-gen.sh
@@ -36,30 +36,28 @@ Optimized I/O manipulations: ❌
 
 Multithreading: ❌
 
-<table>
-    <td> </td>
+<table align="center">
     <tr>
-        <td> </td>
-        <td> </td>
-        <td> <I><b>contact </td> 
-        <td> <I><b>mit </td>
-        <td> <I><b>dblp_coauthor </td>
+        <td align="center"> </td align="center">
+        <td align="center"> </td align="center">
+        <td align="center"> <I><b>contact </td align="center"> 
+        <td align="center"> <I><b>mit </td align="center">
+        <td align="center"> <I><b>dblp_coauthor </td align="center">
     <tr>
-        <td rowspan="3"> <I>data statistics </td>
-        <td> <I>n </td> <td> 274 </td> <td> 96 </td> <td> 1824701 </td>
+        <td align="center" rowspan="3"> <I>data statistics </td align="center">
+        <td align="center"> <I>n </td align="center"> <td align="center"> 274 </td align="center"> <td align="center"> 96 </td align="center"> <td align="center"> 1824701 </td align="center">
         <tr>
-        <td> <I>m </td> <td> 28244 </td> <td> 1086404 </td> <td> 29487744 </td>
+        <td align="center"> <I>m </td align="center"> <td align="center"> 28244 </td align="center"> <td align="center"> 1086404 </td align="center"> <td align="center"> 29487744 </td align="center">
         <tr>
-        <td> <I>tmax </td> <td> 15661 </td> <td> 33451 </td> <td> 76 </td>
+        <td align="center"> <I>tmax </td align="center"> <td align="center"> 15661 </td align="center"> <td align="center"> 33451 </td align="center"> <td align="center"> 76 </td align="center">
     <tr>
-        <td rowspan="4"> <I>query num </td>
-        <td> 100 </td> <td> &lt 1s <p> &lt 1s </td> <td> 15s <p> &lt 1s </td> <td> 11min 34s <p> 3min 29s </td>
+        <td align="center" rowspan="4"> <I>query num </td align="center">
+        <td align="center"> 100 </td align="center"> <td align="center"> &lt 1s <p> &lt 1s </td align="center"> <td align="center"> 15s <p> &lt 1s </td align="center"> <td align="center"> 11min 34s <p> 3min 29s </td align="center">
         <tr>
-        <td> 1000 </td> <td> 1s <p> 1s </td> <td> 2min 30s <p> &lt 1s</td> <td> / </td>
+        <td align="center"> 1000 </td align="center"> <td align="center"> 1s <p> 1s </td align="center"> <td align="center"> 2min 30s <p> &lt 1s</td align="center"> <td align="center"> / </td align="center">
         <tr>
-        <td> 10000 </td> <td> 15s <p> 2s </td> <td> 25min 16s <p> 1s </td> <td> / </td>
+        <td align="center"> 10000 </td align="center"> <td align="center"> 15s <p> 2s </td align="center"> <td align="center"> 25min 16s <p> 1s </td align="center"> <td align="center"> / </td align="center">
         <tr>
-        <td> 100000 </td> <td> 2min 14s <p> 27s </td> <td> / <p> 17s </td> <td> /</td>
+        <td align="center"> 100000 </td align="center"> <td align="center"> 2min 14s <p> 27s </td align="center"> <td align="center"> / <p> 17s </td align="center"> <td align="center"> /</td align="center">
     <tr>
-    <td> </td> <td> </td> <td> </td> <td> </td> <td> </td>
 </table>
