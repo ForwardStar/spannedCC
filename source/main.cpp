@@ -6,7 +6,7 @@
 TemporalGraph * build(char * argv[]) {
     std::cout << "Building graph..." << std::endl;
     int build_graph_start_time = time(NULL);
-    TemporalGraph * Graph = new TemporalGraph(argv[1], (char *)"Undirected");
+    TemporalGraph * Graph = new TemporalGraph(argv[1], (char *)"Undirected", argv[4]);
     int build_graph_end_time = time(NULL);
     std::cout << "Build graph success in " << timeFormatting(difftime(build_graph_end_time, build_graph_start_time)).str() << std::endl;
     std::cout << "n = " << Graph->numOfVertices() << ", m = " << Graph->numOfEdges() << ", tmax = " << Graph->tmax << std::endl;
@@ -34,23 +34,23 @@ int main(int argc, char * argv[]) {
 
     if (std::strcmp(argv[4], "Baseline") == 0) {
         std::cout << "Running baseline..." << std::endl;
-        BaselineIndex Index;
+        BaselineIndex *Index = new BaselineIndex();
         std::ifstream is((char *)"model");
         if (is.good()) {
-            Index.deserialize(is);
+            Index->deserialize(is);
         }
         else {
             std::cout << "Constructing the index structure..." << std::endl;
             int index_construction_start_time = time(NULL);
-            Index = BaselineIndex(Graph);
+            Index = new BaselineIndex(Graph);
             int index_construction_end_time = time(NULL);
             std::cout << "Index construction completed in " << timeFormatting(difftime(index_construction_end_time, index_construction_start_time)).str() << std::endl;
             std::ofstream os((char *)"model");
-            Index.serialize(os);
+            Index->serialize(os);
         }
         std::cout << "Solving queries..." << std::endl;
         int query_start_time = time(NULL);
-        baseline(&Index, Graph, argv[2], argv[3]);
+        baseline(Index, Graph, argv[2], argv[3]);
         int query_end_time = time(NULL);
         std::cout << "Query completed in " << timeFormatting(difftime(query_end_time, query_start_time)).str() << std::endl;
         std::cout << "Baseline completed!" << std::endl;

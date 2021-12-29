@@ -39,8 +39,9 @@ class TemporalGraph {
         // temporal_edge[t] --> the edge set at time t.
         std::vector<std::vector<std::pair<int, int>>> temporal_edge;
 
-        // is_directed: whether the graph is a directed graph.
-        bool is_directed;
+        // is_directed: whether the graph is a directed graph;
+        // is_online: whether the solution is online search.
+        bool is_directed, is_online;
 
         // numOfVertices(): get the number of the vertices in the graph.
         int numOfVertices();
@@ -63,7 +64,8 @@ class TemporalGraph {
         // addEdge(u, v, t): add an edge (u, v, t) to the graph.
         void addEdge(int u, int v, int t);
 
-        TemporalGraph(char *graph_file, char *graph_type);
+        TemporalGraph() {}
+        TemporalGraph(char *graph_file, char *graph_type, char *solution_type);
         ~TemporalGraph();
 
 };
