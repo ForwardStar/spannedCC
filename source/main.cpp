@@ -15,6 +15,8 @@ TemporalGraph * build(char * argv[]) {
 
 int main(int argc, char * argv[]) {
 
+    std::ios::sync_with_stdio(false);
+
     int start_time = time(NULL);
 
     if (argc != 5) {
