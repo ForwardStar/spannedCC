@@ -38,8 +38,7 @@ Multithreading: ❌
 
 <table align="center">
     <tr>
-        <td align="center"> </td align="center">
-        <td align="center"> </td align="center">
+        <td align="center", colspan="2"> <b>Parameter </td align="center">
         <td align="center"> <I><b>contact </td align="center"> 
         <td align="center"> <I><b>mit </td align="center">
         <td align="center"> <I><b>dblp_coauthor </td align="center">
@@ -50,6 +49,10 @@ Multithreading: ❌
         <td align="center"> <I>m </td align="center"> <td align="center"> 28244 </td align="center"> <td align="center"> 1086404 </td align="center"> <td align="center"> 29487744 </td align="center">
         <tr>
         <td align="center"> <I>tmax </td align="center"> <td align="center"> 15661 </td align="center"> <td align="center"> 33451 </td align="center"> <td align="center"> 76 </td align="center">
+    <tr>
+        <td align="center" rowspan="2"> <I>Index construction </td> <td align="center"> <I>time </td> <td align="center"> 44s </td> <td align="center"> 14min 10s </td> <td align="center"> 41min 39s </td>
+        <tr>
+        <td align="center"> <I>space </td> <td align="center"> 2571M </td> <td align="center"> 2140M </td> <td align="center"> 81.5G </td>
     <tr>
         <td align="center" rowspan="4"> <I>query num </td align="center">
         <td align="center"> 100 </td align="center"> <td align="center"> &lt 1s <p> &lt 1s </td align="center"> <td align="center"> 15s <p> &lt 1s </td align="center"> <td align="center"> 11min 34s <p> 3min 29s </td align="center">
