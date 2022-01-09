@@ -30,18 +30,15 @@ class TemporalGraph {
         // tmax: the maximum time of all temporal edges.
         int tmax;
 
-        // vertex_set: the set of vertices.
-        std::set<int> vertex_set;
-
         // head_edge[vertex] --> the head edge from this vertex.
-        std::map<int, Edge *> head_edge;
+        std::vector<Edge *> head_edge;
 
         // temporal_edge[t] --> the edge set at time t.
         std::vector<std::vector<std::pair<int, int>>> temporal_edge;
 
         // is_directed: whether the graph is a directed graph;
         // is_online: whether the solution is online search.
-        bool is_directed, is_online;
+        bool is_directed, is_general;
 
         // numOfVertices(): get the number of the vertices in the graph.
         int numOfVertices();
@@ -65,7 +62,8 @@ class TemporalGraph {
         void addEdge(int u, int v, int t);
 
         TemporalGraph() {}
-        TemporalGraph(char *graph_file, char *graph_type, char *solution_type);
+        TemporalGraph(char *graph_file, char *graph_type);
+        TemporalGraph(TemporalGraph * Graph, int ts, int te);
         ~TemporalGraph();
 
 };

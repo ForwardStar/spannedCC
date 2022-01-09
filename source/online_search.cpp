@@ -6,27 +6,27 @@ std::stringstream onlineSearch(TemporalGraph * Graph, int ts, int te) {
     std::stringstream Ans;
     std::unordered_set<int> Vis;
     std::set<int> CurrentCC;
-    std::set<int>::iterator it;
     std::queue<int> Q;
+    TemporalGraph * G = new TemporalGraph(Graph, ts, te);
     
     Ans << "The spanned connected components in [" << ts << ", " << te << "] are:\n";
-    for (it = Graph->vertex_set.begin(); it != Graph->vertex_set.end(); it++) {
-        if (Vis.find(*it) == Vis.end()) {
-            Q.push(*it);
+    for (int u = 0; u < G->numOfVertices(); ++u) {
+        if (Vis.find(u) == Vis.end()) {
+            Q.push(u);
             CurrentCC.clear();
-            CurrentCC.insert(*it);
+            CurrentCC.insert(u);
             while (!Q.empty()) {
-                int u = Q.front();
+                int v = Q.front();
                 Q.pop();
-                Vis.insert(u);
-                TemporalGraph::Edge * edge = Graph->getHeadEdge(u);
+                Vis.insert(v);
+                TemporalGraph::Edge * edge = G->getHeadEdge(v);
                 while (edge) {
-                    if (ts <= edge->interaction_time && edge->interaction_time <= te && Vis.find(edge->to) == Vis.end()) {
+                    if (Vis.find(edge->to) == Vis.end()) {
                         Q.push(edge->to);
                         CurrentCC.insert(edge->to);
                         Vis.insert(edge->to);
                     }
-                    edge = Graph->getNextEdge(edge);
+                    edge = G->getNextEdge(edge);
                 }
             }
             std::set<int>::iterator set_iterator;
@@ -38,19 +38,20 @@ std::stringstream onlineSearch(TemporalGraph * Graph, int ts, int te) {
         }
     }
 
+    delete G;
+
     return Ans;
 
 }
 
 void online(TemporalGraph * Graph, char * query_file, char * output_file) {
     
-    int ts, te, tmax;
+    int ts, te;
     int query_num = 0;
     std::ifstream fin(query_file);
     std::ofstream fout(output_file);
 
     while (fin >> ts >> te) {
-        tmax = std::max(tmax, te);
         ++query_num;
     }
 

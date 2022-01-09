@@ -19,16 +19,19 @@ class BaselineIndex {
 
     public:
 
-        // Ssize[ts][u][id]: the size of connected component at u at time t(ts, u, id) with start time ts, calculated by prefix sum;
-        // S[ts][u][id]: the connected component mounted at u at time t(ts, u, id) with start time ts;
+        // Ssize[ts][u][id]: the size of connected component at u at time t(ts, u, id) with start time ts, 
+        //                   calculated by prefix sum;
+        // S[ts][u][id]: the new vertices in the connected component mounted at u at time t(ts, u, id) with start time ts, 
+        //               -1 if u becomes not a mounted point;
         // L[ts][u][id]: the label of u at time t(ts, u, id) with start time ts;
-        // T[ts][u][id]: the index change time function which indicates the id-th index change time of u, referred to as t(ts, u, id) with start time ts.
-        std::vector<std::map<int, std::vector<int>>> Ssize;
-        std::vector<std::map<int, std::vector<std::unordered_set<int>>>> S;
-        std::vector<std::map<int, std::vector<int>>> L;
-        std::vector<std::map<int, std::vector<int>>> T;
+        // T[ts][u][id]: the index change time function which indicates the id-th index change time of u, 
+        //               referred to as t(ts, u, id) with start time ts.
+        std::vector<std::vector<std::vector<int>>> Ssize;
+        std::vector<std::vector<std::vector<std::unordered_set<int>>>> S;
+        std::vector<std::vector<std::vector<int>>> L;
+        std::vector<std::vector<std::vector<int>>> T;
 
-        std::stringstream solve(TemporalGraph * Graph, int ts, int te);
+        std::stringstream solve(int n, int ts, int te);
 
         BaselineIndex() {}
         BaselineIndex(TemporalGraph * Graph);
@@ -39,4 +42,4 @@ class BaselineIndex {
 
 };
 
-void baseline(BaselineIndex * Index, TemporalGraph * Graph, char * query_file, char * output_file);
+void baseline(BaselineIndex * Index, int vertex_num, char * query_file, char * output_file);
