@@ -70,8 +70,8 @@ TemporalGraph::TemporalGraph(char *graph_file, char *graph_type) {
 
 TemporalGraph::TemporalGraph(TemporalGraph * Graph, int ts, int te) {
 
-    n = Graph->n;
-    m = Graph->m;
+    n = Graph->numOfVertices();
+    m = Graph->numOfEdges();
     tmax = Graph->tmax;
     is_directed = Graph->is_directed;
     is_general = 0;

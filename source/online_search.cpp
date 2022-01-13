@@ -4,35 +4,36 @@
 std::stringstream onlineSearch(TemporalGraph * Graph, int ts, int te) {
 
     std::stringstream Ans;
-    std::unordered_set<int> Vis;
-    std::set<int> CurrentCC;
+    std::vector<bool> Vis(Graph->numOfVertices());
+    std::vector<int> CurrentCC;
     std::queue<int> Q;
     TemporalGraph * G = new TemporalGraph(Graph, ts, te);
     
     Ans << "The spanned connected components in [" << ts << ", " << te << "] are:\n";
     for (int u = 0; u < G->numOfVertices(); ++u) {
-        if (Vis.find(u) == Vis.end()) {
+        if (!Vis[u]) {
+            Vis[u] = 1;
             Q.push(u);
             CurrentCC.clear();
-            CurrentCC.insert(u);
+            CurrentCC.push_back(u);
             while (!Q.empty()) {
                 int v = Q.front();
                 Q.pop();
-                Vis.insert(v);
                 TemporalGraph::Edge * edge = G->getHeadEdge(v);
                 while (edge) {
-                    if (Vis.find(edge->to) == Vis.end()) {
+                    if (!Vis[edge->to]) {
                         Q.push(edge->to);
-                        CurrentCC.insert(edge->to);
-                        Vis.insert(edge->to);
+                        CurrentCC.push_back(edge->to);
+                        Vis[edge->to] = 1;
                     }
                     edge = G->getNextEdge(edge);
                 }
             }
-            std::set<int>::iterator set_iterator;
+            std::vector<int>::iterator it;
+            std::sort(CurrentCC.begin(), CurrentCC.end());
             Ans << "{ ";
-            for (set_iterator = CurrentCC.begin(); set_iterator != CurrentCC.end(); set_iterator++) {
-                Ans << *set_iterator << " ";
+            for (it = CurrentCC.begin(); it != CurrentCC.end(); it++) {
+                Ans << *it << " ";
             }
             Ans << "}\n";
         }

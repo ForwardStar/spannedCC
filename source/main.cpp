@@ -51,7 +51,7 @@ int main(int argc, char * argv[]) {
             // std::ofstream os((char *)"model");
             // Index->serialize(os);
         }
-        int vertex_num = Graph->n;
+        int vertex_num = Graph->numOfVertices();
         delete Graph;
         std::cout << "Solving queries..." << std::endl;
         int query_start_time = time(NULL);

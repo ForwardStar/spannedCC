@@ -27,7 +27,7 @@ class BaselineIndex {
         // T[ts][u][id]: the index change time function which indicates the id-th index change time of u, 
         //               referred to as t(ts, u, id) with start time ts.
         std::vector<std::vector<std::vector<int>>> Ssize;
-        std::vector<std::vector<std::vector<std::unordered_set<int>>>> S;
+        std::vector<std::vector<std::vector<std::vector<int>>>> S;
         std::vector<std::vector<std::vector<int>>> L;
         std::vector<std::vector<std::vector<int>>> T;
 

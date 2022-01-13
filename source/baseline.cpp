@@ -5,15 +5,15 @@ bool BaselineIndex::add(int ts, int u, int t) {
     if (T[ts][u].size() == 0) {
         T[ts][u].push_back(t);
         L[ts][u].push_back(u);
-        S[ts][u].push_back(std::unordered_set<int>());
-        S[ts][u][0].insert(u);
+        S[ts][u].push_back(std::vector<int>());
+        S[ts][u][0].push_back(u);
         Ssize[ts][u].push_back(1);
         return true;
     }
     else if (T[ts][u][T[ts][u].size() - 1] < t) {
         T[ts][u].push_back(t);
         L[ts][u].push_back(L[ts][u][L[ts][u].size() - 1]);
-        S[ts][u].push_back(std::unordered_set<int>());
+        S[ts][u].push_back(std::vector<int>());
         Ssize[ts][u].push_back(Ssize[ts][u][Ssize[ts][u].size() - 1]);
         return true;
     }
@@ -55,19 +55,19 @@ void BaselineIndex::unioN(int ts, int u, int v, int t) {
     Ssize[ts][mount_u][Ssize[ts][mount_u].size() - 1] += Ssize[ts][mount_v][Ssize[ts][mount_v].size() - 1];
     Ssize[ts][mount_v][Ssize[ts][mount_v].size() - 1] = 0;
 
-    std::vector<std::unordered_set<int>>::iterator vector_iterator;
-    std::unordered_set<int>::iterator unordered_set_iterator;
+    std::vector<std::vector<int>>::iterator it;
+    std::vector<int>::iterator it1;
 
-    for (vector_iterator = S[ts][mount_v].begin(); vector_iterator != S[ts][mount_v].end(); vector_iterator++) {
-        for (unordered_set_iterator = vector_iterator->begin(); unordered_set_iterator != vector_iterator->end(); unordered_set_iterator++) {
-            add(ts, *unordered_set_iterator, t);
-            L[ts][*unordered_set_iterator][L[ts][*unordered_set_iterator].size() - 1] = mount_u;
-            S[ts][mount_u][S[ts][mount_u].size() - 1].insert(*unordered_set_iterator);
+    for (it = S[ts][mount_v].begin(); it != S[ts][mount_v].end(); it++) {
+        for (it1 = it->begin(); it1 != it->end(); it1++) {
+            add(ts, *it1, t);
+            L[ts][*it1][L[ts][*it1].size() - 1] = mount_u;
+            S[ts][mount_u][S[ts][mount_u].size() - 1].push_back(*it1);
         }
     }
 
     S[ts][mount_v][S[ts][mount_v].size() - 1].clear();
-    S[ts][mount_v][S[ts][mount_v].size() - 1].insert(-1);
+    S[ts][mount_v][S[ts][mount_v].size() - 1].push_back(-1);
 
 }
 
@@ -92,8 +92,8 @@ int BaselineIndex::binarySearch(int ts, int u, int t) {
 std::stringstream BaselineIndex::solve(int n, int ts, int te) {
     
     std::stringstream Ans;
-    std::unordered_set<int> Vis;
-    std::set<int> CurrentCC;
+    std::vector<bool> Vis(n);
+    std::vector<int> CurrentCC;
 
     Ans << "The spanned connected components in [" << ts << ", " << te << "] are:\n";
     for (int u = 0; u < n; ++u) {
@@ -103,27 +103,27 @@ std::stringstream BaselineIndex::solve(int n, int ts, int te) {
             continue;
         }
         int mount_u = find(ts, u, idx);
-        if (Vis.find(mount_u) == Vis.end()) {
-            Vis.insert(mount_u);
+        if (!Vis[mount_u]) {
+            Vis[mount_u] = 1;
             idx = binarySearch(ts, mount_u, te);
 
             CurrentCC.clear();
-            std::unordered_set<int>::iterator unordered_set_iterator;
-            std::set<int>::iterator set_iterator;
+            std::vector<int>::iterator it;
 
             for (idx; idx >= 0; --idx) {
-                for (unordered_set_iterator = S[ts][mount_u][idx].begin(); unordered_set_iterator != S[ts][mount_u][idx].end(); unordered_set_iterator++) {
-                    if (*unordered_set_iterator != -1) {
-                        CurrentCC.insert(*unordered_set_iterator);
+                for (it = S[ts][mount_u][idx].begin(); it != S[ts][mount_u][idx].end(); it++) {
+                    if (*it != -1) {
+                        CurrentCC.push_back(*it);
                     }
                 }
             }
-            Ans << "{ ";
             if (CurrentCC.size() == 0) {
-                Ans << u << " ";
+                CurrentCC.push_back(u);
             }
-            for (set_iterator = CurrentCC.begin(); set_iterator != CurrentCC.end(); set_iterator++) {
-                Ans << *set_iterator << " ";
+            std::sort(CurrentCC.begin(), CurrentCC.end());
+            Ans << "{ ";
+            for (it = CurrentCC.begin(); it != CurrentCC.end(); it++) {
+                Ans << *it << " ";
             }
             Ans << "}\n";
         }
@@ -143,12 +143,12 @@ BaselineIndex::BaselineIndex(TemporalGraph * Graph) {
         T.push_back(std::vector<std::vector<int>>());
         L.push_back(std::vector<std::vector<int>>());
         Ssize.push_back(std::vector<std::vector<int>>());
-        S.push_back(std::vector<std::vector<std::unordered_set<int>>>());
-        for (int u = 0; u < Graph->n; ++u) {
+        S.push_back(std::vector<std::vector<std::vector<int>>>());
+        for (int u = 0; u < Graph->numOfVertices(); ++u) {
             T[ts].push_back(std::vector<int>());
             L[ts].push_back(std::vector<int>());
             Ssize[ts].push_back(std::vector<int>());
-            S[ts].push_back(std::vector<std::unordered_set<int>>());
+            S[ts].push_back(std::vector<std::vector<int>>());
         }
         for (int te = ts; te <= Graph->tmax; ++te) {
             std::vector<std::pair<int, int>>::iterator it;
@@ -184,21 +184,21 @@ void BaselineIndex::serialize(std::ofstream & os) {
 
     // Serialize S
     os << "Serialized S:" << std::endl;
-    std::vector<std::vector<std::vector<std::unordered_set<int>>>>::iterator it_S;
+    std::vector<std::vector<std::vector<std::vector<int>>>>::iterator it_S;
     for (it_S = S.begin(); it_S != S.end(); it_S++) {
         if (it_S->size() == 0) {
             continue;
         }
-        std::vector<std::vector<std::unordered_set<int>>>::iterator it1;
+        std::vector<std::vector<std::vector<int>>>::iterator it1;
         int u = 0;
         for (it1 = it_S->begin(); it1 != it_S->end(); it1++) {
             os << u++ << std::endl;
-            std::vector<std::unordered_set<int>>::iterator it2;
+            std::vector<std::vector<int>>::iterator it2;
             for (it2 = it1->begin(); it2 != it1->end(); it2++) {
                 if (it2->size() == 0) {
                     continue;
                 }
-                std::unordered_set<int>::iterator it3;
+                std::vector<int>::iterator it3;
                 for (it3 = it2->begin(); it3 != it2->end(); it3++) {
                     os << *it3 << " ";
                 }
@@ -286,21 +286,21 @@ void BaselineIndex::deserialize(std::ifstream & is) {
         int vertex;
         ssline >> vertex;
         if (S.size() == 0 || vertex < S[S.size() - 1].size()) {
-            S.push_back(std::vector<std::vector<std::unordered_set<int>>>());
+            S.push_back(std::vector<std::vector<std::vector<int>>>());
         }
         while (vertex >= S[S.size() - 1].size()) {
-            S[S.size() - 1].push_back(std::vector<std::unordered_set<int>>());
+            S[S.size() - 1].push_back(std::vector<std::vector<int>>());
         }
-        S[S.size() - 1][vertex] = std::vector<std::unordered_set<int>>();
+        S[S.size() - 1][vertex] = std::vector<std::vector<int>>();
         while (std::getline(is, line)) {
             if (line.empty()) {
                 break;
             }
             ssline = std::stringstream(line);
-            S[S.size() - 1][vertex].push_back(std::unordered_set<int>());
+            S[S.size() - 1][vertex].push_back(std::vector<int>());
             int cc_element;
             while (ssline >> cc_element) {
-                S[S.size() - 1][vertex][S[S.size() - 1][vertex].size() - 1].insert(cc_element);
+                S[S.size() - 1][vertex][S[S.size() - 1][vertex].size() - 1].push_back(cc_element);
             }
         }
     }
