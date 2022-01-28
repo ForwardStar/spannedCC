@@ -1,5 +1,5 @@
-#ifndef commonfunctions
-#define commonfunctions
+#ifndef COMMONFUNCTIONS
+#define COMMONFUNCTIONS
 
 #include <ctime>
 #include <iomanip>

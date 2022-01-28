@@ -158,6 +158,17 @@ BaselineIndex::BaselineIndex(TemporalGraph * Graph) {
         }
     }
 
+    int memory = 0;
+    for (int ts = 0; ts <= Graph->tmax; ++ts) {
+        std::vector<std::vector<int>>::iterator it;
+        for (it = T[ts].begin(); it != T[ts].end(); it++) {
+            memory += it->size();
+        }
+    }
+    std::cout << memory << std::endl;
+
+    // 148879612
+
 }
 
 void BaselineIndex::serialize(std::ofstream & os) {
