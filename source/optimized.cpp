@@ -34,7 +34,7 @@ bool OptimizedIndex::addte(int u, int te) {
 
 int OptimizedIndex::find(int u, int id_ts, int id_te) {
     
-    if (L[u][id_ts].size() == 0) {
+    if (id_te == -1 || L[u][id_ts].size() == 0) {
         return u;
     }
     return L[u][id_ts][std::min(id_te, int(L[u][id_ts].size()) - 1)];
@@ -112,7 +112,12 @@ int OptimizedIndex::binarySearchte(int u, int id_ts, int te) {
         }
     }
 
-    return r;
+    if (r == -1 || T[u][id_ts][r] <= te) {
+        return r;
+    }
+    else {
+        return -1;
+    }
 
 }
 
@@ -170,11 +175,13 @@ OptimizedIndex::OptimizedIndex(TemporalGraph * Graph) {
     // L_snapshot[u][id]: the label of u at time t(u, id);
     // S_snapshot[u][id]: the spanned CC mounted at u at time t(u, id);
     // T_snapshot[u][id]: the time t(u, id);
-    // Vt[t]: the mounting points at time t.
+    // Vt[t]: the mounting points at time t;
+    // isolated[t]: the isolated vertices at time t.
     std::vector<std::vector<int>> L_snapshot;
     std::vector<std::vector<std::vector<int>>> S_snapshot;
     std::vector<std::vector<int>> T_snapshot;
     std::vector<std::vector<int>> Vt;
+    std::vector<std::vector<int>> Isolated;
     for (int u = 0; u < Graph->numOfVertices(); ++u) {
         L_snapshot.push_back(std::vector<int>());
         S_snapshot.push_back(std::vector<std::vector<int>>());
@@ -214,9 +221,13 @@ OptimizedIndex::OptimizedIndex(TemporalGraph * Graph) {
             }
         }
         Vt.push_back(std::vector<int>());
+        Isolated.push_back(std::vector<int>());
         for (int u = 0; u < Graph->numOfVertices(); ++u) {
             if (T_snapshot[u].size() > 0 && T_snapshot[u][T_snapshot[u].size() - 1] == t && S_snapshot[u][S_snapshot[u].size() - 1].size() > 0) {
                 Vt[t].push_back(u);
+            }
+            else if (T_snapshot[u].size() == 0 || T_snapshot[u][T_snapshot[u].size() - 1] < t) {
+                Isolated[t].push_back(u);
             }
         }
     }
@@ -228,8 +239,7 @@ OptimizedIndex::OptimizedIndex(TemporalGraph * Graph) {
     int tmax = Graph->tmax;
     delete Graph;
 
-    std::vector<int> ts_idx_of_vertices;
-    std::vector<bool> Delta_V;
+    std::vector<int> currentIdx;
 
     for (int u = 0; u < n; ++u) {
         Ssize.push_back(std::vector<std::vector<int>>());
@@ -237,82 +247,84 @@ OptimizedIndex::OptimizedIndex(TemporalGraph * Graph) {
         L.push_back(std::vector<std::vector<int>>());
         T.push_back(std::vector<std::vector<int>>());
         Ts.push_back(std::vector<int>());
-        ts_idx_of_vertices.push_back(0);
-        Delta_V.push_back(0);
+        currentIdx.push_back(0);
     }
 
     start_time = time(NULL);
     for (int ts = 0; ts <= tmax; ++ts) {
-        int sum = 0;
         putProcess(double(ts) / tmax, difftime(time(NULL), start_time));
-        std::vector<int>::iterator it;
         if (ts == 0) {
             for (int u = 0; u < n; ++u) {
                 addts(u, 0);
-                Delta_V[u] = 1;
+            }
+            std::vector<int>::iterator it;
+            for (it = Vt[ts].begin(); it != Vt[ts].end(); it++) {
+                ++currentIdx[*it];
             }
         }
-        else if (ts == 1) {
-            for (int u = 0; u < n; ++u) {
-                Delta_V[u] = 0;
-            }
-        }
-        else if (ts > 1) {
-            for (it = Vt[ts - 2].begin(); it != Vt[ts - 2].end(); it++) {
-                int idx = ts_idx_of_vertices[*it] - 1;
-                std::vector<int>::iterator it1;
-                for (it1 = S_snapshot[*it][idx].begin(); it1 != S_snapshot[*it][idx].end(); it1++) 
-                    if (Delta_V[*it1] == 1) {
-                        int id_ts = binarySearchts(*it1, ts - 2);
-                        int id_te = binarySearchte(*it1, id_ts, tmax);
-                        int mount = find(*it1, id_ts, id_te);
-                        Delta_V[mount] = 0;
-                        id_ts = binarySearchts(mount, ts - 2);
-                        id_te = binarySearchte(mount, id_ts, tmax);
-                        std::vector<int>::iterator it2;
-                        for (id_te; id_te >= 0; --id_te) {
-                            for (it2 = S[mount][id_ts][id_te].begin(); it2 != S[mount][id_ts][id_te].end(); it2++) {
-                                Delta_V[*it2] = 0;
-                            }
+        else {
+
+            std::vector<int>::iterator it;
+
+            for (it = Isolated[ts].begin(); it != Isolated[ts].end(); it++) {
+                if (Ts[*it][Ts[*it].size() - 1] == ts) {
+                    continue;
+                }
+                int id_ts = L[*it].size() - 1;
+                int id_te = binarySearchte(*it, id_ts, ts);
+                int mount = find(*it, id_ts, id_te);
+                if (mount == *it) {
+                    continue;
+                }
+                else {
+                    id_te = L[mount][id_ts].size() - 1;
+                    mount = find(mount, id_ts, id_te);
+                    id_ts = L[mount].size() - 1;
+                    for (id_te = S[mount][id_ts].size() - 1; id_te >= 0; --id_te) {
+                        std::vector<int>::iterator it1;
+                        for (it1 = S[mount][id_ts][id_te].begin(); it1 != S[mount][id_ts][id_te].end(); it1++) {
+                            addts(*it1, ts);
                         }
                     }
+                }
             }
-        }
-        if (ts > 0) {
-            for (it = Vt[ts - 1].begin(); it != Vt[ts - 1].end(); it++) {
-                int idx = ts_idx_of_vertices[*it]++;
-                std::vector<int>::iterator it1;
-                for (it1 = S_snapshot[*it][idx].begin(); it1 != S_snapshot[*it][idx].end(); it1++) 
-                    if (Delta_V[*it1] == 0) {
-                        int id_ts = binarySearchts(*it1, ts - 1);
-                        int id_te = binarySearchte(*it1, id_ts, tmax);
-                        int mount = find(*it1, id_ts, id_te);
-                        Delta_V[mount] = 1;
-                        id_ts = binarySearchts(mount, ts - 1);
-                        id_te = binarySearchte(mount, id_ts, tmax);
-                        if (id_te >= 0) {
-                            sum += Ssize[mount][id_ts][id_te];
-                        }
-                        else {
-                            ++sum;
-                        }
-                        std::vector<int>::iterator it2;
-                        for (id_te; id_te >= 0; --id_te) {
-                            for (it2 = S[mount][id_ts][id_te].begin(); it2 != S[mount][id_ts][id_te].end(); it2++) {
-                                addts(*it2, ts);
-                                Delta_V[*it2] = 1;
-                            }
+
+            for (it = Vt[ts].begin(); it != Vt[ts].end(); it++) {
+                if (Ts[*it][Ts[*it].size() - 1] == ts) {
+                    continue;
+                }
+                int id_ts = L[*it].size() - 1;
+                int id_te = binarySearchte(*it, id_ts, ts);
+                int mount = find(*it, id_ts, id_te);
+                id_ts = L[mount].size() - 1;
+                id_te = binarySearchte(mount, id_ts, ts);
+                int idx = currentIdx[*it]++;
+                if (id_te == -1 || Ssize[mount][id_ts][id_te] != S_snapshot[*it][idx].size()) {
+                    if (id_te == -1) {
+                        addts(mount, ts);
+                        continue;
+                    }
+                    id_te = L[mount][id_ts].size() - 1;
+                    mount = find(mount, id_ts, id_te);
+                    id_ts = L[mount].size() - 1;
+                    for (id_te = S[mount][id_ts].size() - 1; id_te >= 0; --id_te) {
+                        std::vector<int>::iterator it1;
+                        for (it1 = S[mount][id_ts][id_te].begin(); it1 != S[mount][id_ts][id_te].end(); it1++) {
+                            addts(*it1, ts);
                         }
                     }
+                }
             }
+
         }
-        std::cout << sum << std::endl;
+
         for (int te = ts; te <= tmax; ++te) {
             std::vector<int>::iterator it;
             for (it = Vt[te].begin(); it != Vt[te].end(); it++) {
-                if (Delta_V[*it] == 0) {
+                if (Ts[*it][Ts[*it].size() - 1] != ts) {
                     continue;
                 }
+
                 int l = 0;
                 int r = T_snapshot[*it].size() - 1;
                 while (l < r) {
@@ -324,29 +336,17 @@ OptimizedIndex::OptimizedIndex(TemporalGraph * Graph) {
                         r = mid - 1;
                     }
                 }
+
                 std::vector<int>::iterator it1;
                 for (it1 = S_snapshot[*it][r].begin(); it1 != S_snapshot[*it][r].end(); it1++) 
-                    if (Delta_V[*it1] == 1) {
+                    if (Ts[*it1][Ts[*it1].size() - 1] == ts) {
                         unioN(*it, *it1, te);
                     }
             }
         }
+
     }
 
-    int memory = 0;
-    for (int u = 0; u < n; ++u) {
-        std::vector<std::vector<int>>::iterator it;
-        for (it = T[u].begin(); it != T[u].end(); it++) {
-            memory += it->size();
-        }
-    }
-    std::cout << memory << std::endl;
-
-    memory = 0;
-    for (int u = 0; u < n; ++u) {
-        memory += Ts[u].size();
-    }
-    std::cout << memory << std::endl;
 }
 
 void optimized(OptimizedIndex * Index, int vertex_num, char * query_file, char * output_file) {
