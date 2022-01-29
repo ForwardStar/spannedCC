@@ -239,15 +239,12 @@ OptimizedIndex::OptimizedIndex(TemporalGraph * Graph) {
     int tmax = Graph->tmax;
     delete Graph;
 
-    std::vector<int> currentIdx;
-
     for (int u = 0; u < n; ++u) {
         Ssize.push_back(std::vector<std::vector<int>>());
         S.push_back(std::vector<std::vector<std::vector<int>>>());
         L.push_back(std::vector<std::vector<int>>());
         T.push_back(std::vector<std::vector<int>>());
         Ts.push_back(std::vector<int>());
-        currentIdx.push_back(0);
     }
 
     start_time = time(NULL);
@@ -256,10 +253,6 @@ OptimizedIndex::OptimizedIndex(TemporalGraph * Graph) {
         if (ts == 0) {
             for (int u = 0; u < n; ++u) {
                 addts(u, 0);
-            }
-            std::vector<int>::iterator it;
-            for (it = Vt[ts].begin(); it != Vt[ts].end(); it++) {
-                ++currentIdx[*it];
             }
         }
         else {
@@ -298,8 +291,20 @@ OptimizedIndex::OptimizedIndex(TemporalGraph * Graph) {
                 int mount = find(*it, id_ts, id_te);
                 id_ts = L[mount].size() - 1;
                 id_te = binarySearchte(mount, id_ts, ts);
-                int idx = currentIdx[*it]++;
-                if (id_te == -1 || Ssize[mount][id_ts][id_te] != S_snapshot[*it][idx].size()) {
+
+                int l = 0;
+                int r = T_snapshot[*it].size() - 1;
+                while (l < r) {
+                    int mid = l + r + 1 >> 1;
+                    if (T_snapshot[*it][mid] <= ts) {
+                        l = mid;
+                    }
+                    else {
+                        r = mid - 1;
+                    }
+                }
+
+                if (id_te == -1 || Ssize[mount][id_ts][id_te] != S_snapshot[*it][r].size()) {
                     if (id_te == -1) {
                         addts(mount, ts);
                         continue;
