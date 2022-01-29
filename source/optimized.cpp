@@ -181,7 +181,6 @@ OptimizedIndex::OptimizedIndex(TemporalGraph * Graph) {
     std::vector<std::vector<std::vector<int>>> S_snapshot;
     std::vector<std::vector<int>> T_snapshot;
     std::vector<std::vector<int>> Vt;
-    std::vector<std::vector<int>> Isolated;
     for (int u = 0; u < Graph->numOfVertices(); ++u) {
         L_snapshot.push_back(std::vector<int>());
         S_snapshot.push_back(std::vector<std::vector<int>>());
@@ -221,13 +220,9 @@ OptimizedIndex::OptimizedIndex(TemporalGraph * Graph) {
             }
         }
         Vt.push_back(std::vector<int>());
-        Isolated.push_back(std::vector<int>());
         for (int u = 0; u < Graph->numOfVertices(); ++u) {
             if (T_snapshot[u].size() > 0 && T_snapshot[u][T_snapshot[u].size() - 1] == t && S_snapshot[u][S_snapshot[u].size() - 1].size() > 0) {
                 Vt[t].push_back(u);
-            }
-            else if (T_snapshot[u].size() == 0 || T_snapshot[u][T_snapshot[u].size() - 1] < t) {
-                Isolated[t].push_back(u);
             }
         }
     }
@@ -259,17 +254,29 @@ OptimizedIndex::OptimizedIndex(TemporalGraph * Graph) {
 
             std::vector<int>::iterator it;
 
-            for (it = Isolated[ts].begin(); it != Isolated[ts].end(); it++) {
+            for (it = Vt[ts - 1].begin(); it != Vt[ts - 1].end(); it++) {
                 if (Ts[*it][Ts[*it].size() - 1] == ts) {
                     continue;
                 }
                 int id_ts = L[*it].size() - 1;
                 int id_te = binarySearchte(*it, id_ts, ts);
                 int mount = find(*it, id_ts, id_te);
-                if (mount == *it) {
-                    continue;
+                id_ts = L[mount].size() - 1;
+                id_te = binarySearchte(mount, id_ts, ts);
+
+                int l = 0;
+                int r = T_snapshot[*it].size() - 1;
+                while (l < r) {
+                    int mid = l + r + 1 >> 1;
+                    if (T_snapshot[*it][mid] <= ts) {
+                        l = mid;
+                    }
+                    else {
+                        r = mid - 1;
+                    }
                 }
-                else {
+
+                if (T_snapshot[*it][r] != ts || Ssize[mount][id_ts][id_te] != S_snapshot[*it][r].size()) {
                     id_te = L[mount][id_ts].size() - 1;
                     mount = find(mount, id_ts, id_te);
                     id_ts = L[mount].size() - 1;

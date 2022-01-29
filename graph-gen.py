@@ -109,14 +109,19 @@ def normalize(filename):
 
 if __name__ == "__main__":
     # download datasets
-    if os.path.isdir("datasets") is False or len(os.listdir("datasets")) == 0:
+    DATASETS_URL = ["http://konect.cc/files/download.tsv.dblp_coauthor.tar.bz2",
+                    "http://konect.cc/files/download.tsv.contact.tar.bz2",
+                    "http://konect.cc/files/download.tsv.sociopatterns-hypertext.tar.bz2",
+                    "http://konect.cc/files/download.tsv.mit.tar.bz2",
+                    "http://konect.cc/files/download.tsv.facebook-wosn-links.tar.bz2"]
+    if os.path.isdir("datasets") is False or len(os.listdir("datasets")) < len(DATASETS_URL):
         print("Downloading datasets...")
         if os.path.isdir("datasets") is False:
             os.mkdir("datasets")
-        download("http://konect.cc/files/download.tsv.dblp_coauthor.tar.bz2", "datasets/download.tsv.dblp_coauthor.tar.bz2")
-        download("http://konect.cc/files/download.tsv.contact.tar.bz2", "datasets/download.tsv.contact.tar.bz2")
-        download("http://konect.cc/files/download.tsv.sociopatterns-hypertext.tar.bz2", "datasets/download.tsv.sociopatterns-hypertext.tar.bz2")
-        download("http://konect.cc/files/download.tsv.mit.tar.bz2", "datasets/download.tsv.mit.tar.bz2")
+        for url in DATASETS_URL:
+            path = os.path.join("datasets", url.split('/')[-1])
+            if not os.path.exists(os.path.join("datasets", path.split('.')[2])):
+                download(url, path)
 
     # extract all datasets
     waiting_message = "Extracting datasets..."
