@@ -217,7 +217,7 @@ BaselineIndex::~BaselineIndex() {
     delete T;
     delete L;
     delete S;
-    delete Ssize;
+    delete size;
 
 }
 
