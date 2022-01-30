@@ -19,6 +19,9 @@ class BaselineIndex {
 
     public:
 
+        // n, m, tmax: graph information.
+        int n, m, tmax;
+
         // Ssize[ts][u][id]: the size of connected component at u at time t(ts, u, id) with start time ts, 
         //                   calculated by prefix sum;
         // S[ts][u][id]: the new vertices in the connected component mounted at u at time t(ts, u, id) with start time ts, 
@@ -26,16 +29,21 @@ class BaselineIndex {
         // L[ts][u][id]: the label of u at time t(ts, u, id) with start time ts;
         // T[ts][u][id]: the index change time function which indicates the id-th index change time of u, 
         //               referred to as t(ts, u, id) with start time ts.
-        std::vector<std::vector<std::vector<int>>> Ssize;
-        std::vector<std::vector<std::vector<std::vector<int>>>> S;
-        std::vector<std::vector<std::vector<int>>> L;
-        std::vector<std::vector<std::vector<int>>> T;
+        std::vector<int> *Ssize;
+        std::vector<std::vector<int>> **S_temp;
+        std::vector<int> **L_temp;
+        std::vector<int> **T_temp;
+
+        int ****S;
+        int ***L;
+        int ***T;
+        int **size;
 
         std::stringstream solve(int n, int ts, int te);
 
         BaselineIndex() {}
         BaselineIndex(TemporalGraph * Graph);
-        ~BaselineIndex() {}
+        ~BaselineIndex();
         
         void serialize(std::ofstream & oa);
         void deserialize(std::ifstream & ia);

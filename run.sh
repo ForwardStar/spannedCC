@@ -1,5 +1,5 @@
 echo "Compiling..."
-g++ -O3 source/*.cpp -o main -std=c++11
+g++ -O3 source/*.cpp -o main -std=c++17
 echo "Running..."
 if [ -n "$1" ]; then
     ./main graph.txt query.txt output.txt $1
