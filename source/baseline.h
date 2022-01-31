@@ -30,14 +30,9 @@ class BaselineIndex {
         // T[ts][u][id]: the index change time function which indicates the id-th index change time of u, 
         //               referred to as t(ts, u, id) with start time ts.
         std::vector<int> *Ssize;
-        std::vector<std::vector<int>> **S_temp;
-        std::vector<int> **L_temp;
-        std::vector<int> **T_temp;
-
-        int ****S;
-        int ***L;
-        int ***T;
-        int **size;
+        std::vector<std::vector<int>> **S;
+        std::vector<int> **L;
+        std::vector<int> **T;
 
         std::stringstream solve(int n, int ts, int te);
 
