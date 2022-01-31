@@ -26,7 +26,7 @@ class OptimizedIndex {
         // L[u][id_ts][id_te]: the label of u at time t(u, id_ts, id_te) with start time ts;
         // T[u][id_ts][id_te]: the index change time function which indicates the id-th index change time of u, 
         //               referred to as t(u, id_ts, id_te) with start time ts, note that T[u][id_ts][0] is the start time.
-        std::vector<std::vector<std::vector<int>>> Ssize;
+        std::vector<int> *Ssize;
         std::vector<std::vector<std::vector<std::vector<int>>>> S;
         std::vector<std::vector<std::vector<int>>> L;
         std::vector<std::vector<std::vector<int>>> T;

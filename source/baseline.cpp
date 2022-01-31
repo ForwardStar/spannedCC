@@ -74,7 +74,7 @@ void BaselineIndex::unioN(int ts, int u, int v, int t) {
 int BaselineIndex::binarySearch(int ts, int u, int t) {
 
     int l = 0;
-    int r = size[ts][u];
+    int r = size[ts][u] - 1;
     while (l < r) {
         int mid = l + r + 1 >> 1;
         if (T[ts][u][mid] <= t) {
@@ -217,7 +217,7 @@ BaselineIndex::~BaselineIndex() {
     delete T;
     delete L;
     delete S;
-    delete Ssize;
+    delete size;
 
 }
 

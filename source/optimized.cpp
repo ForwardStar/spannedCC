@@ -6,7 +6,6 @@ bool OptimizedIndex::addts(int u, int ts) {
     T[u].push_back(std::vector<int>());
     L[u].push_back(std::vector<int>());
     S[u].push_back(std::vector<std::vector<int>>());
-    Ssize[u].push_back(std::vector<int>());
     return true;
 
 }
@@ -18,14 +17,14 @@ bool OptimizedIndex::addte(int u, int te) {
         L[u][L[u].size() - 1].push_back(u);
         S[u][S[u].size() - 1].push_back(std::vector<int>());
         S[u][S[u].size() - 1][0].push_back(u);
-        Ssize[u][Ssize[u].size() - 1].push_back(1);
+        Ssize[u].push_back(1);
         return true;
     }
     if (T[u][T[u].size() - 1][T[u][T[u].size() - 1].size() - 1] < te) {
         T[u][T[u].size() - 1].push_back(te);
         L[u][L[u].size() - 1].push_back(L[u][L[u].size() - 1][L[u][L[u].size() - 1].size() - 1]);
         S[u][S[u].size() - 1].push_back(std::vector<int>());
-        Ssize[u][Ssize[u].size() - 1].push_back(Ssize[u][Ssize[u].size() - 1][Ssize[u][Ssize[u].size() - 1].size() - 1]);
+        Ssize[u].push_back(Ssize[u][Ssize[u].size() - 1]);
         return true;
     }
     return false;
@@ -56,13 +55,13 @@ void OptimizedIndex::unioN(int u, int v, int t) {
     addte(mount_v, t);
 
     // Merge the smaller connected component into the larger one.
-    if (Ssize[mount_u][Ssize[mount_u].size() - 1][Ssize[mount_u][Ssize[mount_u].size() - 1].size() - 1] < \
-        Ssize[mount_v][Ssize[mount_v].size() - 1][Ssize[mount_v][Ssize[mount_v].size() - 1].size() - 1]) {
+    if (Ssize[mount_u][Ssize[mount_u].size() - 1] < \
+        Ssize[mount_v][Ssize[mount_v].size() - 1]) {
         std::swap(u, v);
         std::swap(mount_u, mount_v);
     }
-    Ssize[mount_u][Ssize[mount_u].size() - 1][Ssize[mount_u][Ssize[mount_u].size() - 1].size() - 1] += Ssize[mount_v][Ssize[mount_v].size() - 1][Ssize[mount_v][Ssize[mount_v].size() - 1].size() - 1];
-    Ssize[mount_v][Ssize[mount_v].size() - 1][Ssize[mount_v][Ssize[mount_v].size() - 1].size() - 1] = 0;
+    Ssize[mount_u][Ssize[mount_u].size() - 1] += Ssize[mount_v][Ssize[mount_v].size() - 1];
+    Ssize[mount_v][Ssize[mount_v].size() - 1] = 0;
 
     std::vector<std::vector<int>>::iterator it;
     std::vector<int>::iterator it1;
@@ -234,8 +233,9 @@ OptimizedIndex::OptimizedIndex(TemporalGraph * Graph) {
     int tmax = Graph->tmax;
     delete Graph;
 
+    Ssize = new std::vector<int>[n]();
+
     for (int u = 0; u < n; ++u) {
-        Ssize.push_back(std::vector<std::vector<int>>());
         S.push_back(std::vector<std::vector<std::vector<int>>>());
         L.push_back(std::vector<std::vector<int>>());
         T.push_back(std::vector<std::vector<int>>());
@@ -244,7 +244,6 @@ OptimizedIndex::OptimizedIndex(TemporalGraph * Graph) {
 
     start_time = time(NULL);
     for (int ts = 0; ts <= tmax; ++ts) {
-        putProcess(double(ts) / tmax, difftime(time(NULL), start_time));
         if (ts == 0) {
             for (int u = 0; u < n; ++u) {
                 addts(u, 0);
@@ -276,7 +275,7 @@ OptimizedIndex::OptimizedIndex(TemporalGraph * Graph) {
                     }
                 }
 
-                if (T_snapshot[*it][r] != ts || Ssize[mount][id_ts][id_te] != S_snapshot[*it][r].size()) {
+                if (T_snapshot[*it][r] != ts || Ssize[mount][id_te] != S_snapshot[*it][r].size()) {
                     id_te = L[mount][id_ts].size() - 1;
                     mount = find(mount, id_ts, id_te);
                     id_ts = L[mount].size() - 1;
@@ -284,6 +283,7 @@ OptimizedIndex::OptimizedIndex(TemporalGraph * Graph) {
                         std::vector<int>::iterator it1;
                         for (it1 = S[mount][id_ts][id_te].begin(); it1 != S[mount][id_ts][id_te].end(); it1++) {
                             addts(*it1, ts);
+                            Ssize[*it1].clear();
                         }
                     }
                 }
@@ -311,9 +311,10 @@ OptimizedIndex::OptimizedIndex(TemporalGraph * Graph) {
                     }
                 }
 
-                if (id_te == -1 || Ssize[mount][id_ts][id_te] != S_snapshot[*it][r].size()) {
+                if (id_te == -1 || Ssize[mount][id_te] != S_snapshot[*it][r].size()) {
                     if (id_te == -1) {
                         addts(mount, ts);
+                        Ssize[mount].clear();
                         continue;
                     }
                     id_te = L[mount][id_ts].size() - 1;
@@ -323,6 +324,7 @@ OptimizedIndex::OptimizedIndex(TemporalGraph * Graph) {
                         std::vector<int>::iterator it1;
                         for (it1 = S[mount][id_ts][id_te].begin(); it1 != S[mount][id_ts][id_te].end(); it1++) {
                             addts(*it1, ts);
+                            Ssize[*it1].clear();
                         }
                     }
                 }
@@ -356,8 +358,12 @@ OptimizedIndex::OptimizedIndex(TemporalGraph * Graph) {
                     }
             }
         }
+        
+        putProcess(double(ts) / tmax, difftime(time(NULL), start_time));
 
     }
+
+    delete [] Ssize;
 
 }
 
@@ -377,8 +383,8 @@ void optimized(OptimizedIndex * Index, int vertex_num, char * query_file, char *
     int i = 0;
     int start_time = time(NULL);
     while (fin >> ts >> te) {
-        putProcess(double(++i) / query_num, difftime(time(NULL), start_time));
         fout << Index->solve(vertex_num, ts, te).str() << std::endl;
+        putProcess(double(++i) / query_num, difftime(time(NULL), start_time));
     }
 
     std::cout << "Average (per query): " << timeFormatting(difftime(time(NULL), start_time) / query_num).str() << std::endl;
