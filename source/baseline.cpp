@@ -38,16 +38,16 @@ void BaselineIndex::unioN(int ts, int u, int v, int t) {
     int mount_u = find(ts, u, L_temp[ts][u].size() - 1);
     int mount_v = find(ts, v, L_temp[ts][v].size() - 1);
 
-    // Already in the same connected component->
+    // Already in the same connected component.
     if (mount_u == mount_v) {
         return;
     }
 
-    // Create a new critical time slot->
+    // Create a new critical time slot.
     add(ts, mount_u, t);
     add(ts, mount_v, t);
 
-    // Merge the smaller connected component into the larger one->
+    // Merge the smaller connected component into the larger one.
     if (Ssize[mount_u][Ssize[mount_u].size() - 1] < Ssize[mount_v][Ssize[mount_v].size() - 1]) {
         std::swap(u, v);
         std::swap(mount_u, mount_v);
@@ -147,7 +147,7 @@ BaselineIndex::BaselineIndex(TemporalGraph * Graph) {
         T_temp[ts] = new std::vector<int>[n]();
         L_temp[ts] = new std::vector<int>[n]();
         S_temp[ts] = new std::vector<std::vector<int>>[n]();
-        for (int te = ts; te <= Graph->tmax; ++te) {
+        for (int te = ts; te <= tmax; ++te) {
             std::vector<std::pair<int, int>>::iterator it;
             for (it = Graph->temporal_edge[te].begin(); it != Graph->temporal_edge[te].end(); it++) {
                 unioN(ts, it->first, it->second, te);
