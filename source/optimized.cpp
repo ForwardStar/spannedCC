@@ -174,8 +174,7 @@ OptimizedIndex::OptimizedIndex(TemporalGraph * Graph) {
     // L_snapshot[u][id]: the label of u at time t(u, id);
     // S_snapshot[u][id]: the spanned CC mounted at u at time t(u, id);
     // T_snapshot[u][id]: the time t(u, id);
-    // Vt[t]: the mounting points at time t;
-    // isolated[t]: the isolated vertices at time t.
+    // Vt[t]: the mounting points at time t.
     std::vector<std::vector<int>> L_snapshot;
     std::vector<std::vector<std::vector<int>>> S_snapshot;
     std::vector<std::vector<int>> T_snapshot;

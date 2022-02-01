@@ -28,9 +28,6 @@ class KruskalReconstructionTree {
         KruskalReconstructionTree() {}
         KruskalReconstructionTree(TemporalGraph * Graph);
         ~KruskalReconstructionTree();
-        
-        void serialize(std::ofstream & oa);
-        void deserialize(std::ifstream & ia);
 
 };
 
