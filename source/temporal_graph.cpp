@@ -1,5 +1,15 @@
 #include "temporal_graph.h"
 
+int TemporalGraph::find(int u) {
+
+    if (L[u] != u) {
+        L[u] = find(L[u]);
+    }
+
+    return L[u];
+
+}
+
 int TemporalGraph::numOfVertices() {
 
     return n;
@@ -44,6 +54,36 @@ void TemporalGraph::addEdge(int u, int v, int t) {
     else {
         head_edge[u] = new Edge(v, t, nullptr);
     }
+
+}
+
+void TemporalGraph::shrink_to_fit() {
+
+    L = new int[n];
+    std::vector<std::pair<int, int>> temp;
+
+    for (int t = 0; t <= tmax; ++t) {
+        for (int u = 0; u < n; ++u) {
+            L[u] = u;
+        }
+        std::vector<std::pair<int, int>>::iterator it;
+        for (it = temporal_edge[t].begin(); it != temporal_edge[t].end(); it++) {
+            int u = it->first;
+            int v = it->second;
+            if (find(u) == find(v)) {
+                continue;
+            }
+            L[L[v]] = L[u];
+            temp.push_back(std::make_pair(u, v));
+        }
+        temporal_edge[t].clear();
+        for (it = temp.begin(); it != temp.end(); it++) {
+            temporal_edge[t].push_back(std::make_pair(it->first, it->second));
+        }
+        temp.clear();
+    }
+
+    delete [] L;
 
 }
 

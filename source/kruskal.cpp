@@ -89,6 +89,11 @@ std::stringstream KruskalReconstructionTree::solve(int n, int ts, int te) {
 KruskalReconstructionTree::KruskalReconstructionTree(TemporalGraph * Graph) {
     
     int start_time = time(NULL);
+    Graph->shrink_to_fit();
+
+    std::cout << "Preprocessing finished in " << timeFormatting(difftime(time(NULL), start_time)).str() << std::endl;
+    start_time = time(NULL);
+
     n = Graph->numOfVertices();
     m = Graph->numOfEdges();
     tmax = Graph->tmax;
