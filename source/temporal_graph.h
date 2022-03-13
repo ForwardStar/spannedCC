@@ -1,5 +1,5 @@
-#ifndef temporal_graph
-#define temporal_graph
+#ifndef TEMPORALGRAPH
+#define TEMPORALGRAPH
 
 #include "commonfunctions.h"
 

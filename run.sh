@@ -4,6 +4,8 @@ echo "Running..."
 if [ -n "$1" ]; then
     ./main graph.txt query.txt output.txt $1
 else
-    ./main graph.txt query.txt output_online.txt Online
-    ./main graph.txt query.txt output_baseline.txt Baseline
+    ./main graph.txt query.txt output_online.txt Online > log_online.txt
+    ./main graph.txt query.txt output_baseline.txt Baseline > log_baseline.txt
+    ./main graph.txt query.txt output_kruskal.txt Kruskal > log_kruskal.txt
+    ./main graph.txt query.txt output_revised_kruskal.txt RKruskal > log_revised_kruskal.txt
 fi

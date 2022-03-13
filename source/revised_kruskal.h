@@ -1,7 +1,7 @@
 #include "commonfunctions.h"
 #include "temporal_graph.h"
 
-class KruskalReconstructionTree {
+class RevisedKruskal {
 
     private:
 
@@ -18,14 +18,15 @@ class KruskalReconstructionTree {
         
         int **L;
         int **T;
+        int *length;
         int *size;
 
         std::stringstream solve(int n, int ts, int te);
 
-        KruskalReconstructionTree() {}
-        KruskalReconstructionTree(TemporalGraph * Graph);
-        ~KruskalReconstructionTree();
+        RevisedKruskal() {}
+        RevisedKruskal(TemporalGraph * Graph);
+        ~RevisedKruskal();
 
 };
 
-void kruskal(KruskalReconstructionTree * Index, int vertex_num, char * query_file, char * output_file);
+void revised_kruskal(RevisedKruskal * Index, int vertex_num, char * query_file, char * output_file);

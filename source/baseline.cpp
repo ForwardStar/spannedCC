@@ -139,10 +139,10 @@ BaselineIndex::BaselineIndex(TemporalGraph * Graph) {
     n = Graph->numOfVertices();
     m = Graph->numOfEdges();
     tmax = Graph->tmax;
-    T = new std::vector<int> *[tmax]();
-    L = new std::vector<int> *[tmax]();
+    T = new std::vector<int> *[tmax + 1]();
+    L = new std::vector<int> *[tmax + 1]();
     Ssize = new std::vector<int>[n]();
-    S = new std::vector<std::vector<int>> *[tmax]();
+    S = new std::vector<std::vector<int>> *[tmax + 1]();
     for (int ts = 0; ts <= tmax; ++ts) {
         T[ts] = new std::vector<int>[n]();
         L[ts] = new std::vector<int>[n]();

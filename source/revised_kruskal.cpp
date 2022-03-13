@@ -1,16 +1,16 @@
-#include "kruskal.h"
+#include "revised_kruskal.h"
 
-int KruskalReconstructionTree::find(int ts, int u) {
+int RevisedKruskal::find(int ts, int u) {
     
-    if (L[ts][u] != u) {
-        return find(ts, L[ts][u]);
+    if (L[u][ts] != u) {
+        return find(ts, L[u][ts]);
     }
 
     return u;
 
 }
 
-void KruskalReconstructionTree::unioN(int ts, int u, int v, int t) {
+void RevisedKruskal::unioN(int ts, int u, int v, int t) {
 
     int mount_u = find(ts, u);
     int mount_v = find(ts, v);
@@ -27,12 +27,12 @@ void KruskalReconstructionTree::unioN(int ts, int u, int v, int t) {
     }
     size[mount_u] += size[mount_v];
     
-    L[ts][mount_v] = mount_u;
-    T[ts][mount_v] = t;
+    L[mount_v][ts] = mount_u;
+    T[mount_v][ts] = t;
 
 }
 
-std::stringstream KruskalReconstructionTree::solve(int n, int ts, int te) {
+std::stringstream RevisedKruskal::solve(int n, int ts, int te) {
     
     std::stringstream Ans;
     int *Vis = new int[n];
@@ -49,8 +49,8 @@ std::stringstream KruskalReconstructionTree::solve(int n, int ts, int te) {
             CurrentCC[u].push_back(u);
 
             int current = u;
-            while (L[ts][current] != current && T[ts][current] <= te) {
-                current = L[ts][current];
+            while (ts <= length[current] && L[current][ts] != current && T[current][ts] <= te) {
+                current = L[current][ts];
                 if (Vis[current] != -1) {
                     std::vector<int>::iterator it;
                     for (it = CurrentCC[u].begin(); it != CurrentCC[u].end(); it++) {
@@ -86,27 +86,49 @@ std::stringstream KruskalReconstructionTree::solve(int n, int ts, int te) {
 
 }
 
-KruskalReconstructionTree::KruskalReconstructionTree(TemporalGraph * Graph) {
+RevisedKruskal::RevisedKruskal(TemporalGraph * Graph) {
     
     int start_time = time(NULL);
     Graph->shrink_to_fit();
 
-    std::cout << "Preprocessing finished in " << timeFormatting(difftime(time(NULL), start_time)).str() << std::endl;
     start_time = time(NULL);
 
     n = Graph->numOfVertices();
     m = Graph->numOfEdges();
     tmax = Graph->tmax;
-    L = new int *[tmax + 1];
-    T = new int *[tmax + 1];
+    L = new int *[n];
+    T = new int *[n];
+    length = new int[n];
     size = new int[n];
+
+    for (int u = 0; u < n; ++u) {
+        length[u] = 0;
+    }
+
+    for (int t = 1; t <= tmax; ++t) {
+        std::vector<std::pair<int, int>>::iterator it;
+        for (it = Graph->temporal_edge[t].begin(); it != Graph->temporal_edge[t].end(); it++) {
+            if (length[it->first] < t) {
+                length[it->first] = t;
+            }
+            if (length[it->second] < t) {
+                length[it->second] = t;
+            }
+        }
+    }
+
+    for (int u = 0; u < n; ++u) {
+        L[u] = new int[length[u] + 1];
+        T[u] = new int[length[u] + 1];
+        for (int t = 0; t <= length[u]; ++t) {
+            L[u][t] = u;
+            T[u][t] = t;
+        }
+    }
+    std::cout << "Preprocessing finished in " << timeFormatting(difftime(time(NULL), start_time)).str() << std::endl;
     
     for (int ts = 0; ts <= tmax; ++ts) {
-        L[ts] = new int[n];
-        T[ts] = new int[n];
         for (int u = 0; u < n; ++u) {
-            L[ts][u] = u;
-            T[ts][u] = ts;
             size[u] = 1;
         }
         for (int te = ts; te <= tmax; ++te) {
@@ -122,19 +144,14 @@ KruskalReconstructionTree::KruskalReconstructionTree(TemporalGraph * Graph) {
 
 }
 
-KruskalReconstructionTree::~KruskalReconstructionTree() {
-
-    for (int ts = 0; ts <= tmax; ++ts) {
-        delete [] L[ts];
-        delete [] T[ts];
-    }
+RevisedKruskal::~RevisedKruskal() {
 
     delete [] L;
     delete [] T;
 
 }
 
-void kruskal(KruskalReconstructionTree * Index, int vertex_num, char * query_file, char * output_file) {
+void revised_kruskal(RevisedKruskal * Index, int vertex_num, char * query_file, char * output_file) {
 
     int ts, te;
     int query_num = 0;

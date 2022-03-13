@@ -1,11 +1,11 @@
-OBJS=main.o commonfunctions.o temporal_graph.o online_search.o baseline.o optimized.o kruskal.o
+OBJS=commonfunctions.o temporal_graph.o online_search.o baseline.o kruskal.o revised_kruskal.o main.o
 CC=g++
-CFLAGS=-O3 -c
+CFLAGS=-c -std=c++11 -O3
 
 main:$(OBJS)
 	$(CC) $^ -o main
 %.o:source/%.cpp
-	$(CC) $^ $(CFLAGS) -o $@
+	$(CC) $^ $(CFLAGS)
 
 clean:
 	$(RM) *.o main
