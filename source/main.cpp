@@ -27,6 +27,7 @@ int main(int argc, char * argv[]) {
     }
 
     TemporalGraph * Graph = build(argv);
+    Graph->shrink_to_fit();
     int vertex_num = Graph->numOfVertices();
 
     if (std::strcmp(argv[4], "Online") == 0) {

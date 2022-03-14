@@ -89,9 +89,6 @@ std::stringstream KruskalReconstructionTree::solve(int n, int ts, int te) {
 KruskalReconstructionTree::KruskalReconstructionTree(TemporalGraph * Graph) {
     
     int start_time = time(NULL);
-    Graph->shrink_to_fit();
-
-    std::cout << "Preprocessing finished in " << timeFormatting(difftime(time(NULL), start_time)).str() << std::endl;
     start_time = time(NULL);
 
     n = Graph->numOfVertices();
@@ -100,13 +97,18 @@ KruskalReconstructionTree::KruskalReconstructionTree(TemporalGraph * Graph) {
     L = new int *[tmax + 1];
     T = new int *[tmax + 1];
     size = new int[n];
-    
+
     for (int ts = 0; ts <= tmax; ++ts) {
         L[ts] = new int[n];
         T[ts] = new int[n];
         for (int u = 0; u < n; ++u) {
             L[ts][u] = u;
             T[ts][u] = ts;
+        }
+    }
+    
+    for (int ts = 0; ts <= tmax; ++ts) {
+        for (int u = 0; u < n; ++u) {
             size[u] = 1;
         }
         for (int te = ts; te <= tmax; ++te) {

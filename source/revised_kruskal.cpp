@@ -89,7 +89,6 @@ std::stringstream RevisedKruskal::solve(int n, int ts, int te) {
 RevisedKruskal::RevisedKruskal(TemporalGraph * Graph) {
     
     int start_time = time(NULL);
-    Graph->shrink_to_fit();
 
     start_time = time(NULL);
 
@@ -125,7 +124,6 @@ RevisedKruskal::RevisedKruskal(TemporalGraph * Graph) {
             T[u][t] = t;
         }
     }
-    std::cout << "Preprocessing finished in " << timeFormatting(difftime(time(NULL), start_time)).str() << std::endl;
     
     for (int ts = 0; ts <= tmax; ++ts) {
         for (int u = 0; u < n; ++u) {
