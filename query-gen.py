@@ -22,8 +22,6 @@ if __name__ == "__main__":
         exit()
     for i in range(num_of_queries):
         ts = random.randint(0, tmax)
-        te = random.randint(0, tmax)
-        if (ts > te):
-            ts, te = te, ts
-        contents += str(ts) + " " + str(te) + "\n"
+        length = random.randint(tmax // 2, tmax)
+        contents += str(ts) + " " + str(min(ts + length, tmax)) + "\n"
     open("query.txt", "w").write(contents)
