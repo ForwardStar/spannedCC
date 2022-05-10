@@ -3,7 +3,7 @@
 #include "online_search.h"
 #include "baseline.h"
 #include "kruskal.h"
-#include "revised_kruskal.h"
+#include "differential_kruskal.h"
 
 TemporalGraph * build(char * argv[]) {
     std::cout << "Building graph..." << std::endl;
@@ -41,10 +41,9 @@ int main(int argc, char * argv[]) {
 
     if (std::strcmp(argv[4], "Baseline") == 0) {
         std::cout << "Running baseline..." << std::endl;
-        BaselineIndex *Index = new BaselineIndex();
         std::cout << "Constructing the index structure..." << std::endl;
         int index_construction_start_time = time(NULL);
-        Index = new BaselineIndex(Graph);
+        BaselineIndex *Index = new BaselineIndex(Graph);
         int index_construction_end_time = time(NULL);
         std::cout << "Index construction completed in " << timeFormatting(difftime(index_construction_end_time, index_construction_start_time)).str() << std::endl;
         delete Graph;
@@ -58,10 +57,9 @@ int main(int argc, char * argv[]) {
 
     if (std::strcmp(argv[4], "Kruskal") == 0) {
         std::cout << "Running kruskal reconstruction tree..." << std::endl;
-        KruskalReconstructionTree *Index = new KruskalReconstructionTree();
         std::cout << "Constructing the index structure..." << std::endl;
         int index_construction_start_time = time(NULL);
-        Index = new KruskalReconstructionTree(Graph);
+        KruskalReconstructionTree *Index = new KruskalReconstructionTree(Graph);
         int index_construction_end_time = time(NULL);
         std::cout << "Index construction completed in " << timeFormatting(difftime(index_construction_end_time, index_construction_start_time)).str() << std::endl;
         delete Graph;
@@ -73,21 +71,20 @@ int main(int argc, char * argv[]) {
         std::cout << "Kruskal reconstruction tree completed!" << std::endl;
     }
 
-    if (std::strcmp(argv[4], "RKruskal") == 0) {
-        std::cout << "Running revised kruskal reconstruction tree..." << std::endl;
-        RevisedKruskal *Index = new RevisedKruskal();
+    if (std::strcmp(argv[4], "DKruskal") == 0) {
+        std::cout << "Running flattened kruskal reconstruction tree..." << std::endl;
         std::cout << "Constructing the index structure..." << std::endl;
         int index_construction_start_time = time(NULL);
-        Index = new RevisedKruskal(Graph);
+        FlattenedKruskal *Index = new FlattenedKruskal(Graph);
         int index_construction_end_time = time(NULL);
         std::cout << "Index construction completed in " << timeFormatting(difftime(index_construction_end_time, index_construction_start_time)).str() << std::endl;
         delete Graph;
         std::cout << "Solving queries..." << std::endl;
         int query_start_time = time(NULL);
-        revised_kruskal(Index, vertex_num, argv[2], argv[3]);
+        flattened_kruskal(Index, vertex_num, argv[2], argv[3]);
         int query_end_time = time(NULL);
         std::cout << "Query completed in " << timeFormatting(difftime(query_end_time, query_start_time)).str() << std::endl;
-        std::cout << "Revised kruskal reconstruction tree completed!" << std::endl;
+        std::cout << "Flattened kruskal reconstruction tree completed!" << std::endl;
     }
 
     int end_time = time(NULL);
