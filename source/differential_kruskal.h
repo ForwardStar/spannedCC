@@ -1,7 +1,7 @@
 #include "commonfunctions.h"
 #include "temporal_graph.h"
 
-class FlattenedKruskal {
+class DifferentialKruskal {
 
     private:
 
@@ -18,10 +18,10 @@ class FlattenedKruskal {
 
         std::stringstream solve(int n, int ts, int te);
 
-        FlattenedKruskal() {}
-        FlattenedKruskal(TemporalGraph * Graph);
-        ~FlattenedKruskal();
+        DifferentialKruskal() {}
+        DifferentialKruskal(TemporalGraph * Graph);
+        ~DifferentialKruskal();
 
 };
 
-void flattened_kruskal(FlattenedKruskal * Index, int vertex_num, char * query_file, char * output_file);
+void differential_kruskal(DifferentialKruskal * Index, int vertex_num, char * query_file, char * output_file);

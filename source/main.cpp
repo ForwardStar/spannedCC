@@ -75,13 +75,13 @@ int main(int argc, char * argv[]) {
         std::cout << "Running flattened kruskal reconstruction tree..." << std::endl;
         std::cout << "Constructing the index structure..." << std::endl;
         int index_construction_start_time = time(NULL);
-        FlattenedKruskal *Index = new FlattenedKruskal(Graph);
+        DifferentialKruskal *Index = new DifferentialKruskal(Graph);
         int index_construction_end_time = time(NULL);
         std::cout << "Index construction completed in " << timeFormatting(difftime(index_construction_end_time, index_construction_start_time)).str() << std::endl;
         delete Graph;
         std::cout << "Solving queries..." << std::endl;
         int query_start_time = time(NULL);
-        flattened_kruskal(Index, vertex_num, argv[2], argv[3]);
+        differential_kruskal(Index, vertex_num, argv[2], argv[3]);
         int query_end_time = time(NULL);
         std::cout << "Query completed in " << timeFormatting(difftime(query_end_time, query_start_time)).str() << std::endl;
         std::cout << "Flattened kruskal reconstruction tree completed!" << std::endl;

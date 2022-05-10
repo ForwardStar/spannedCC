@@ -24,7 +24,7 @@ bool unioN(int * parent, int u, int v) {
 
 }
 
-void construct_disjoint_set(FlattenedKruskal * Index, int * parent, int ts) {
+void construct_disjoint_set(DifferentialKruskal * Index, int * parent, int ts) {
 
     for (int t = 0; t < ts; ++t) {
         for (int i = Index->actual_time[t].size() - 1; i >= 0; --i) {
@@ -42,7 +42,7 @@ void construct_disjoint_set(FlattenedKruskal * Index, int * parent, int ts) {
 
 }
 
-int FlattenedKruskal::find_an_index(int t, int ts, int te) {
+int DifferentialKruskal::find_an_index(int t, int ts, int te) {
 
     int l = 0;
     int r = actual_time[t].size() - 1;
@@ -68,7 +68,7 @@ int FlattenedKruskal::find_an_index(int t, int ts, int te) {
 
 }
 
-std::stringstream FlattenedKruskal::solve(int n, int ts, int te) {
+std::stringstream DifferentialKruskal::solve(int n, int ts, int te) {
 
     std::stringstream Ans;
     int *parent = new int[n];
@@ -140,7 +140,7 @@ std::stringstream FlattenedKruskal::solve(int n, int ts, int te) {
 
 }
 
-FlattenedKruskal::FlattenedKruskal(TemporalGraph * Graph) {
+DifferentialKruskal::DifferentialKruskal(TemporalGraph * Graph) {
 
     int start_time = time(NULL);
     start_time = time(NULL);
@@ -183,14 +183,14 @@ FlattenedKruskal::FlattenedKruskal(TemporalGraph * Graph) {
 
 }
 
-FlattenedKruskal::~FlattenedKruskal() {
+DifferentialKruskal::~DifferentialKruskal() {
 
     delete [] relation;
     delete [] actual_time;
 
 }
 
-void flattened_kruskal(FlattenedKruskal * Index, int vertex_num, char * query_file, char * output_file) {
+void differential_kruskal(DifferentialKruskal * Index, int vertex_num, char * query_file, char * output_file) {
 
     int ts, te;
     int query_num = 0;
