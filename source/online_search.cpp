@@ -1,6 +1,5 @@
 #include "online_search.h"
 
-// Please refer to the pseudo code in Algorithm 1.
 std::stringstream onlineSearch(TemporalGraph * Graph, int ts, int te) {
 
     std::stringstream Ans;

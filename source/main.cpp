@@ -6,6 +6,7 @@
 #include "differential_kruskal.h"
 
 TemporalGraph * build(char * argv[]) {
+
     std::cout << "Building graph..." << std::endl;
     int build_graph_start_time = time(NULL);
     TemporalGraph * Graph = new TemporalGraph(argv[1], (char *)"Undirected");
@@ -13,6 +14,7 @@ TemporalGraph * build(char * argv[]) {
     std::cout << "Build graph success in " << timeFormatting(difftime(build_graph_end_time, build_graph_start_time)).str() << std::endl;
     std::cout << "n = " << Graph->numOfVertices() << ", m = " << Graph->numOfEdges() << ", tmax = " << Graph->tmax << std::endl;
     return Graph;
+    
 }
 
 int main(int argc, char * argv[]) {
@@ -72,7 +74,7 @@ int main(int argc, char * argv[]) {
     }
 
     if (std::strcmp(argv[4], "DKruskal") == 0) {
-        std::cout << "Running flattened kruskal reconstruction tree..." << std::endl;
+        std::cout << "Running differential kruskal reconstruction tree..." << std::endl;
         std::cout << "Constructing the index structure..." << std::endl;
         int index_construction_start_time = time(NULL);
         DifferentialKruskal *Index = new DifferentialKruskal(Graph);
@@ -84,7 +86,7 @@ int main(int argc, char * argv[]) {
         differential_kruskal(Index, vertex_num, argv[2], argv[3]);
         int query_end_time = time(NULL);
         std::cout << "Query completed in " << timeFormatting(difftime(query_end_time, query_start_time)).str() << std::endl;
-        std::cout << "Flattened kruskal reconstruction tree completed!" << std::endl;
+        std::cout << "Differential kruskal reconstruction tree completed!" << std::endl;
     }
 
     int end_time = time(NULL);
