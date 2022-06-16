@@ -194,7 +194,7 @@ TemporalGraph::TemporalGraph(char *graph_file, char *graph_type) {
 
     is_directed = std::strcmp(graph_type, "Directed") == 0;
     is_general = 1;
-
+    n = 0;
     while (fin >> u >> v >> t) {
         n = std::max(n, std::max(u, v));
         ++m;

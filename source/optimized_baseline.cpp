@@ -36,7 +36,7 @@ std::stringstream OptimizedBaseline::solve(int n, int ts, int te){
     Ans << "The spanned connected components in [" << ts << ", " << te << "] are:\n";
     std::vector<int> CurrentCC;
     for(int u=0;u<n;u++){
-        if(Vis[u]==0){
+        if(Vis[u]==0){// means u is a root of a tree
             CurrentCC.clear();
             CurrentCC.push_back(u);
             std::queue<int> q;
@@ -73,6 +73,7 @@ OptimizedBaseline::OptimizedBaseline(TemporalGraph * Graph){
     L.resize(n);
     for(int ts=0;ts<=tmax;ts++){
         dS[ts].resize(n);
+        // reset L
         for(int i=0;i<n;i++){
             L[i]=i;
         }

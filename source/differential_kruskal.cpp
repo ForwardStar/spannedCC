@@ -47,7 +47,7 @@ int DifferentialKruskal::find_an_index(int t, int ts, int te) {
     int l = 0;
     int r = actual_time[t].size() - 1;
 
-    if (r == -1 || actual_time[t][r] < ts) {
+    if (r == -1 || actual_time[t][r] < ts || actual_time[t][0] > te) {
         return -1;
     }
     
@@ -176,7 +176,7 @@ DifferentialKruskal::DifferentialKruskal(TemporalGraph * Graph) {
         }
         actual_time[ts].shrink_to_fit();
         relation[ts].shrink_to_fit();
-        putProcess(double(ts) / tmax, difftime(time(NULL), start_time));
+        //putProcess(double(ts) / tmax, difftime(time(NULL), start_time));
     }
 
     delete [] parent;

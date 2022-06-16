@@ -88,8 +88,8 @@ std::stringstream KruskalReconstructionTree::solve(int n, int ts, int te) {
 
 KruskalReconstructionTree::KruskalReconstructionTree(TemporalGraph * Graph) {
     
-    int start_time = time(NULL);
-    start_time = time(NULL);
+    //int start_time = time(NULL);
+    //start_time = time(NULL);
 
     n = Graph->numOfVertices();
     m = Graph->numOfEdges();
@@ -117,7 +117,7 @@ KruskalReconstructionTree::KruskalReconstructionTree(TemporalGraph * Graph) {
                 unioN(ts, it->first, it->second, te);
             }
         }
-        putProcess(double(ts) / tmax, difftime(time(NULL), start_time));
+    //    putProcess(double(ts) / tmax, difftime(time(NULL), start_time));
     }
 
     delete [] size;

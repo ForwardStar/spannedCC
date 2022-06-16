@@ -31,10 +31,10 @@ class TemporalGraph {
         };
 
         // n: the number of vertices; m: the number of edges.
-        int n, m;
+        int n=0, m=0;
 
         // tmax: the maximum time of all temporal edges.
-        int tmax;
+        int tmax=0;
 
         // head_edge[vertex] --> the head edge from this vertex.
         std::vector<Edge *> head_edge;
