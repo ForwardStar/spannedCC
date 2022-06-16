@@ -8,4 +8,5 @@ else
     ./main graph.txt query.txt output_baseline.txt Baseline > log_baseline.txt
     ./main graph.txt query.txt output_kruskal.txt Kruskal > log_kruskal.txt
     ./main graph.txt query.txt output_differential_kruskal.txt DKruskal > log_differential_kruskal.txt
+    ./main graph.txt query.txt output_optimized_baseline.txt OptimizedBaseline > log_optimized_baseline.txt
 fi
