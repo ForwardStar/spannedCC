@@ -143,7 +143,6 @@ std::stringstream DifferentialKruskal::solve(int n, int ts, int te) {
 DifferentialKruskal::DifferentialKruskal(TemporalGraph * Graph) {
 
     int start_time = time(NULL);
-    start_time = time(NULL);
 
     n = Graph->numOfVertices();
     m = Graph->numOfEdges();

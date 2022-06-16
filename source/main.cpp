@@ -58,7 +58,7 @@ int main(int argc, char * argv[]) {
         std::cout << "Baseline completed!" << std::endl;
     }
 
-    if (std::strcmp(argv[4], "OptimizedBaseline") == 0) {
+    if (std::strcmp(argv[4], "OBaseline") == 0) {
         std::cout << "Running optimized baseline..." << std::endl;
         std::cout << "Constructing the index structure..." << std::endl;
         int index_construction_start_time = time(NULL);
@@ -68,7 +68,7 @@ int main(int argc, char * argv[]) {
         delete Graph;
         std::cout << "Solving queries..." << std::endl;
         int query_start_time = time(NULL);
-        OBaseline(Index, vertex_num, argv[2], argv[3]);
+        optimized_baseline(Index, vertex_num, argv[2], argv[3]);
         int query_end_time = time(NULL);
         std::cout << "Query completed in " << timeFormatting(difftime(query_end_time, query_start_time)).str() << std::endl;
         std::cout << "Optimized Baseline completed!" << std::endl;
