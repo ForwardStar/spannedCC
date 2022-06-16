@@ -51,7 +51,7 @@ int DifferentialKruskal::find_an_index(int t, int ts, int te) {
         return -1;
     }
     
-    while (true) {
+    while (l < r) {
         int mid = l + r >> 1;
         if (actual_time[t][mid] >= ts && actual_time[t][mid] <= te) {
             return mid;
@@ -61,9 +61,16 @@ int DifferentialKruskal::find_an_index(int t, int ts, int te) {
                 l = mid + 1;
             }
             else {
-                r = mid - 1;
+                r = mid;
             }
         }
+    }
+
+    if (actual_time[t][l] >= ts && actual_time[t][l] <= te) {
+        return l;
+    }
+    else {
+        return -1;
     }
 
 }
