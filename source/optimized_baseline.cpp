@@ -58,9 +58,9 @@ std::stringstream OptimizedBaseline::solve(int n, int ts, int te){
             Ans << "}\n";
         }
     }
-    CurrentCC.resize(0);
     delete [] S;
-    Vis.resize(0);
+    std::vector<int>().swap(Vis);
+    std::vector<int>().swap(CurrentCC);
     return Ans;
 }
 
@@ -90,7 +90,7 @@ OptimizedBaseline::OptimizedBaseline(TemporalGraph * Graph){
 }
 
 OptimizedBaseline::~OptimizedBaseline(){
-    L.resize(0);
+    std::vector<int>().swap(L);
     delete [] dS;
 }
 
