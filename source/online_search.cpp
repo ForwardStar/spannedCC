@@ -62,9 +62,9 @@ void online(TemporalGraph * Graph, char * query_file, char * output_file) {
     while (fin >> ts >> te) {
         // Perform online BFS Search
         fout << onlineSearch(Graph, ts, te).str() << std::endl;
-        putProcess(double(++i) / query_num, difftime(int(currentTime()), start_time));
+        putProcess(double(++i) / query_num, currentTime() - start_time);
     }
 
-    std::cout << "Average: " << timeFormatting(difftime(int(currentTime()), start_time) / query_num).str() << std::endl;
+    std::cout << "Average: " << timeFormatting((currentTime() - start_time) / query_num).str() << std::endl;
 
 }
