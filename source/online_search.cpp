@@ -58,7 +58,7 @@ void online(TemporalGraph * Graph, char * query_file, char * output_file) {
     fin = std::ifstream(query_file);
 
     int i = 0;
-    int start_time = currentTime();
+    unsigned long long start_time = currentTime();
     while (fin >> ts >> te) {
         // Perform online BFS Search
         fout << onlineSearch(Graph, ts, te).str() << std::endl;
