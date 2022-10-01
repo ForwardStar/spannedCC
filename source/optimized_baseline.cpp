@@ -86,7 +86,7 @@ std::stringstream OptimizedBaseline::solve(int n, int ts, int te) {
 
 OptimizedBaseline::OptimizedBaseline(TemporalGraph * Graph){
 
-    int start_time = time(NULL);
+    int start_time = currentTime();
 
     n = Graph->numOfVertices();
     m = Graph->numOfEdges();
@@ -108,7 +108,7 @@ OptimizedBaseline::OptimizedBaseline(TemporalGraph * Graph){
                 optimized_unioN(ts, it->first, it->second, te);
             }
         }
-        putProcess(double(ts) / tmax, difftime(time(NULL), start_time));
+        putProcess(double(ts) / tmax, difftime(int(currentTime()), start_time));
     }
 
 }
@@ -133,12 +133,12 @@ void optimized_baseline(OptimizedBaseline * Index, int vertex_num, char * query_
     fin = std::ifstream(query_file);
 
     int i = 0;
-    int start_time = time(NULL);
+    int start_time = currentTime();
     while (fin >> ts >> te) {
         fout << Index->solve(vertex_num, ts, te).str() << std::endl;
-        putProcess(double(++i) / query_num, difftime(time(NULL), start_time));
+        putProcess(double(++i) / query_num, difftime(int(currentTime()), start_time));
     }
 
-    std::cout << "Average (per query): " << timeFormatting(difftime(time(NULL), start_time) / query_num).str() << std::endl;
+    std::cout << "Average (per query): " << timeFormatting(difftime(int(currentTime()), start_time) / query_num).str() << std::endl;
 
 }

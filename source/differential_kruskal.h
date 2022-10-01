@@ -22,6 +22,8 @@ class DifferentialKruskal {
         DifferentialKruskal(TemporalGraph * Graph);
         ~DifferentialKruskal();
 
+        int size();
+
 };
 
 void differential_kruskal(DifferentialKruskal * Index, int vertex_num, char * query_file, char * output_file);

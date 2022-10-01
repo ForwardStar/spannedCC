@@ -8,9 +8,11 @@ void putProcess(double procedure, int time_used) {
     
 }
 
-std::stringstream timeFormatting(int seconds) {
+std::stringstream timeFormatting(int microSeconds) {
 
     std::stringstream ret;
+    ret << microSeconds << "μs" << " (";
+    int seconds = microSeconds / 1000000;
     if (seconds < 60) {
         ret << seconds << "s";
     }
@@ -20,6 +22,16 @@ std::stringstream timeFormatting(int seconds) {
     else {
         ret << seconds / 3600 << "h " << seconds % 3600 / 60 << "min " << seconds % 60 << "s";
     }
+    ret << ")";
     return ret;
+
+}
+
+time_t currentTime() {
+
+    std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+    std::chrono::system_clock::duration duration = now.time_since_epoch();
+    time_t microSecondsOfDuration = std::chrono::duration_cast<std::chrono::microseconds>(duration).count();
+    return microSecondsOfDuration;
 
 }

@@ -149,7 +149,7 @@ std::stringstream DifferentialKruskal::solve(int n, int ts, int te) {
 
 DifferentialKruskal::DifferentialKruskal(TemporalGraph * Graph) {
 
-    int start_time = time(NULL);
+    int start_time = currentTime();
 
     n = Graph->numOfVertices();
     m = Graph->numOfEdges();
@@ -182,7 +182,7 @@ DifferentialKruskal::DifferentialKruskal(TemporalGraph * Graph) {
         }
         actual_time[ts].shrink_to_fit();
         relation[ts].shrink_to_fit();
-        putProcess(double(ts) / tmax, difftime(time(NULL), start_time));
+        putProcess(double(ts) / tmax, difftime(int(currentTime()), start_time));
     }
 
     delete [] parent;
@@ -193,6 +193,20 @@ DifferentialKruskal::~DifferentialKruskal() {
 
     delete [] relation;
     delete [] actual_time;
+
+}
+
+int DifferentialKruskal::size() {
+    
+    int memory = 0;
+    for (int ts = 0; ts <= tmax; ++ts) {
+        std::vector<std::vector<std::pair<int, int>>>::iterator it;
+        for (it = relation[ts].begin(); it != relation[ts].end(); it++) {
+            memory += it->size();
+        }
+    }
+    memory <<= 3;
+    return memory;
 
 }
 
@@ -210,11 +224,11 @@ void differential_kruskal(DifferentialKruskal * Index, int vertex_num, char * qu
     fin = std::ifstream(query_file);
 
     int i = 0;
-    int start_time = time(NULL);
+    int start_time = currentTime();
     while (fin >> ts >> te) {
         fout << Index->solve(vertex_num, ts, te).str() << std::endl;
-        putProcess(double(++i) / query_num, difftime(time(NULL), start_time));
+        putProcess(double(++i) / query_num, difftime(int(currentTime()), start_time));
     }
 
-    std::cout << "Average (per query): " << timeFormatting(difftime(time(NULL), start_time) / query_num).str() << std::endl;
+    std::cout << "Average (per query): " << timeFormatting(difftime(int(currentTime()), start_time) / query_num).str() << std::endl;
 }

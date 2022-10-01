@@ -2,6 +2,7 @@
 #define COMMONFUNCTIONS
 
 #include <ctime>
+#include <chrono>
 #include <iomanip>
 #include <iostream>
 #include <fstream>
@@ -18,5 +19,7 @@
 void putProcess(double procedure, int time_used);
 
 std::stringstream timeFormatting(int seconds);
+
+time_t currentTime();
 
 #endif
