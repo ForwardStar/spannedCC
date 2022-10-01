@@ -1,6 +1,6 @@
 #include "commonfunctions.h"
 
-void putProcess(double procedure, int time_used) {
+void putProcess(double procedure, unsigned long long time_used) {
 
     std::cout << std::fixed << std::setprecision(3) << "Processing: " << procedure * 100 << "%" \
             << "\t\tTime: " << timeFormatting(time_used).str() \
@@ -8,30 +8,30 @@ void putProcess(double procedure, int time_used) {
     
 }
 
-std::stringstream timeFormatting(int microSeconds) {
+std::stringstream timeFormatting(unsigned long long microSeconds) {
 
     std::stringstream ret;
     ret << microSeconds << "μs" << " (";
-    int seconds = microSeconds / 1000000;
+    unsigned long long seconds = microSeconds / 1000000ull;
     if (seconds < 60) {
         ret << seconds << "s";
     }
     else if (seconds < 3600) {
-        ret << seconds / 60 << "min " << seconds % 60 << "s";
+        ret << seconds / 60ull << "min " << seconds % 60ull << "s";
     }
     else {
-        ret << seconds / 3600 << "h " << seconds % 3600 / 60 << "min " << seconds % 60 << "s";
+        ret << seconds / 3600ull << "h " << seconds % 3600ull / 60ull << "min " << seconds % 60ull << "s";
     }
     ret << ")";
     return ret;
 
 }
 
-time_t currentTime() {
+unsigned long long currentTime() {
 
     std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
     std::chrono::system_clock::duration duration = now.time_since_epoch();
-    time_t microSecondsOfDuration = std::chrono::duration_cast<std::chrono::microseconds>(duration).count();
+    unsigned long long microSecondsOfDuration = std::chrono::duration_cast<std::chrono::microseconds>(duration).count();
     return microSecondsOfDuration;
 
 }

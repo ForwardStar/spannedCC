@@ -16,10 +16,10 @@
 #include <unordered_set>
 #include <queue>
 
-void putProcess(double procedure, int time_used);
+void putProcess(double procedure, unsigned long long time_used);
 
-std::stringstream timeFormatting(int seconds);
+std::stringstream timeFormatting(unsigned long long seconds);
 
-time_t currentTime();
+unsigned long long currentTime();
 
 #endif

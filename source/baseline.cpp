@@ -135,7 +135,7 @@ std::stringstream BaselineIndex::solve(int n, int ts, int te) {
 
 BaselineIndex::BaselineIndex(TemporalGraph * Graph) {
     
-    int start_time = currentTime();
+    unsigned long long start_time = currentTime();
     n = Graph->numOfVertices();
     m = Graph->numOfEdges();
     tmax = Graph->tmax;
@@ -156,7 +156,7 @@ BaselineIndex::BaselineIndex(TemporalGraph * Graph) {
         for (int u = 0; u < Graph->numOfVertices(); ++u) {
             Ssize[u].clear();
         }
-        putProcess(double(ts) / tmax, difftime(int(currentTime()), start_time));
+        putProcess(double(ts) / tmax, currentTime() - start_time);
     }
 
     delete [] Ssize;
@@ -203,12 +203,12 @@ void baseline(BaselineIndex * Index, int vertex_num, char * query_file, char * o
     fin = std::ifstream(query_file);
 
     int i = 0;
-    int start_time = currentTime();
+    unsigned long long start_time = currentTime();
     while (fin >> ts >> te) {
         fout << Index->solve(vertex_num, ts, te).str() << std::endl;
-        putProcess(double(++i) / query_num, difftime(int(currentTime()), start_time));
+        putProcess(double(++i) / query_num, currentTime() - start_time);
     }
 
-    std::cout << "Average (per query): " << timeFormatting(difftime(int(currentTime()), start_time) / query_num).str() << std::endl;
+    std::cout << "Average (per query): " << timeFormatting((currentTime() - start_time) / query_num).str() << std::endl;
 
 }
