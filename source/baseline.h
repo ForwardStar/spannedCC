@@ -40,7 +40,7 @@ class BaselineIndex {
         BaselineIndex(TemporalGraph * Graph);
         ~BaselineIndex();
         
-        int size();
+        unsigned long long size();
 
         void serialize(std::ofstream & oa);
         void deserialize(std::ifstream & ia);

@@ -176,9 +176,9 @@ BaselineIndex::~BaselineIndex() {
 
 }
 
-int BaselineIndex::size() {
+unsigned long long BaselineIndex::size() {
 
-    int memory = 0;
+    unsigned long long memory = 0;
     for (int ts = 0; ts <= tmax; ++ts) {
         for (int u = 0; u < n; ++u) {
             memory += T[ts][u].size();

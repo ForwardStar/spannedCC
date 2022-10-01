@@ -196,9 +196,9 @@ DifferentialKruskal::~DifferentialKruskal() {
 
 }
 
-int DifferentialKruskal::size() {
+unsigned long long DifferentialKruskal::size() {
     
-    int memory = 0;
+    unsigned long long memory = 0;
     for (int ts = 0; ts <= tmax; ++ts) {
         std::vector<std::vector<std::pair<int, int>>>::iterator it;
         for (it = relation[ts].begin(); it != relation[ts].end(); it++) {

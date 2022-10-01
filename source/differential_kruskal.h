@@ -22,7 +22,7 @@ class DifferentialKruskal {
         DifferentialKruskal(TemporalGraph * Graph);
         ~DifferentialKruskal();
 
-        int size();
+        unsigned long long size();
 
 };
 
