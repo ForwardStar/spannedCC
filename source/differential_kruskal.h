@@ -13,14 +13,15 @@ class DifferentialKruskal {
         int n, m, tmax;
         
         // each relation[t][t'][i] represents an edge.
-        std::vector<std::vector<std::pair<int, int>>> *relation;
-        std::vector<int> *actual_time;
+        std::vector<std::vector<std::vector<std::pair<int, int>>>> relation;
+        std::vector<std::vector<int>> actual_time;
+        std::vector<int> actual_start_time;
 
         std::stringstream solve(int n, int ts, int te);
 
         DifferentialKruskal() {}
         DifferentialKruskal(TemporalGraph * Graph);
-        ~DifferentialKruskal();
+        ~DifferentialKruskal() {};
 
         unsigned long long size();
 

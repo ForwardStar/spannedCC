@@ -38,7 +38,7 @@ int main(int argc, char * argv[]) {
         unsigned long long online_search_start_time = currentTime();
         online(Graph, argv[2], argv[3]);
         unsigned long long online_search_end_time = currentTime();
-        std::cout << "Online search completed in " << timeFormatting(difftime(online_search_end_time, online_search_start_time)).str() << std::endl;
+        std::cout << "Online search completed in " << timeFormatting(online_search_end_time - online_search_start_time).str() << std::endl;
         delete Graph;
     }
 
@@ -55,7 +55,7 @@ int main(int argc, char * argv[]) {
         unsigned long long query_start_time = currentTime();
         baseline(Index, vertex_num, argv[2], argv[3]);
         unsigned long long query_end_time = currentTime();
-        std::cout << "Query completed in " << timeFormatting(difftime(query_end_time, query_start_time)).str() << std::endl;
+        std::cout << "Query completed in " << timeFormatting(query_end_time - query_start_time).str() << std::endl;
         std::cout << "Baseline completed!" << std::endl;
     }
 
@@ -71,7 +71,7 @@ int main(int argc, char * argv[]) {
         unsigned long long query_start_time = currentTime();
         optimized_baseline(Index, vertex_num, argv[2], argv[3]);
         unsigned long long query_end_time = currentTime();
-        std::cout << "Query completed in " << timeFormatting(difftime(query_end_time, query_start_time)).str() << std::endl;
+        std::cout << "Query completed in " << timeFormatting(query_end_time - query_start_time).str() << std::endl;
         std::cout << "Optimized Baseline completed!" << std::endl;
     }
 
@@ -87,7 +87,7 @@ int main(int argc, char * argv[]) {
         unsigned long long query_start_time = currentTime();
         kruskal(Index, vertex_num, argv[2], argv[3]);
         unsigned long long query_end_time = currentTime();
-        std::cout << "Query completed in " << timeFormatting(difftime(query_end_time, query_start_time)).str() << std::endl;
+        std::cout << "Query completed in " << timeFormatting(query_end_time - query_start_time).str() << std::endl;
         std::cout << "Kruskal reconstruction tree completed!" << std::endl;
     }
 
@@ -104,7 +104,7 @@ int main(int argc, char * argv[]) {
         unsigned long long query_start_time = currentTime();
         differential_kruskal(Index, vertex_num, argv[2], argv[3]);
         unsigned long long query_end_time = currentTime();
-        std::cout << "Query completed in " << timeFormatting(difftime(query_end_time, query_start_time)).str() << std::endl;
+        std::cout << "Query completed in " << timeFormatting(query_end_time - query_start_time).str() << std::endl;
         std::cout << "Differential kruskal reconstruction tree completed!" << std::endl;
     }
 
