@@ -86,7 +86,7 @@ std::stringstream DifferentialKruskal::solve(int n, int ts, int te) {
         parent[u] = u;
     }
 
-    for (int t = 0; t <= actual_start_time.size(); ++t) {
+    for (int t = 0; t < actual_start_time.size(); ++t) {
         if (actual_start_time[t] > ts) {
             break;
         }
@@ -200,7 +200,7 @@ DifferentialKruskal::DifferentialKruskal(TemporalGraph * Graph) {
 unsigned long long DifferentialKruskal::size() {
     
     unsigned long long memory = 0;
-    for (int t = 0; t <= actual_start_time.size(); ++t) {
+    for (int t = 0; t < actual_start_time.size(); ++t) {
         std::vector<std::vector<std::pair<int, int>>>::iterator it;
         for (it = relation[t].begin(); it != relation[t].end(); it++) {
             memory += it->size();
