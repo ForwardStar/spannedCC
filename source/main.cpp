@@ -10,7 +10,7 @@ TemporalGraph * build(char * argv[]) {
 
     std::cout << "Building graph..." << std::endl;
     unsigned long long build_graph_start_time = currentTime();
-    TemporalGraph * Graph = new TemporalGraph(argv[1], (char *)"Undirected");
+    TemporalGraph * Graph = new TemporalGraph(argv[1], (char *)"Undirected", 1);
     unsigned long long build_graph_end_time = currentTime();
     std::cout << "Build graph success in " << timeFormatting(difftime(build_graph_end_time, build_graph_start_time)).str() << std::endl;
     std::cout << "n = " << Graph->numOfVertices() << ", m = " << Graph->numOfEdges() << ", tmax = " << Graph->tmax << std::endl;

@@ -187,7 +187,7 @@ void TemporalGraph::shrink_to_fit() {
 
 }
 
-TemporalGraph::TemporalGraph(char *graph_file, char *graph_type) {
+TemporalGraph::TemporalGraph(char *graph_file, char *graph_type, double factor) {
 
     int u, v, t;
     std::ifstream fin(graph_file);
@@ -206,6 +206,7 @@ TemporalGraph::TemporalGraph(char *graph_file, char *graph_type) {
     }
     ++n;
     
+    tmax *= factor;
 }
 
 TemporalGraph::TemporalGraph(TemporalGraph * Graph, int ts, int te) {

@@ -71,7 +71,7 @@ class TemporalGraph {
         void shrink_to_fit();
 
         TemporalGraph() {}
-        TemporalGraph(char *graph_file, char *graph_type);
+        TemporalGraph(char *graph_file, char *graph_type, double factor);
         TemporalGraph(TemporalGraph * Graph, int ts, int te);
         ~TemporalGraph();
 
