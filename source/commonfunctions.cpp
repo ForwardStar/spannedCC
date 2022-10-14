@@ -1,5 +1,31 @@
 #include "commonfunctions.h"
 
+void putCCNumAndSize(int n, int *p) {
+    int *size = new int[n];
+    for (int u = 0; u < n; ++u) {
+        size[u] = 0;
+    }
+    for (int u = 0; u < n; ++u) {
+        int now = u;
+        while (p[now] != now) {
+            now = p[now];
+        }
+        size[now]++;
+    }
+    int num = 0;
+    for (int i = 0; i < n; ++i) {
+        if (size[i] > 0) {
+            num++;
+        }
+    }
+    std::sort(size, size + n);
+    if (num % 2 != 0) {
+        std::cout << "Medium CC size: " << size[n - ((num + 1) / 2)] << "; Nontrivial CC num: " << num << std::endl;
+    } else {
+        std::cout << "Medium CC size: " << double(size[n - num / 2] + size[n - num / 2 - 1]) / 2 << "; Nontrivial CC num: " << num << std::endl;
+    }
+}
+
 void putProcess(double procedure, unsigned long long time_used) {
 
     std::cout << std::fixed << std::setprecision(3) << "Processing: " << procedure * 100 << "%" \
