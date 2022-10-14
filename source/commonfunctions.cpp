@@ -2,9 +2,12 @@
 
 void putCCNumAndSize(int n, int *p) {
     int *size = new int[n];
+    int *distribution = new int[n + 1];
     for (int u = 0; u < n; ++u) {
         size[u] = 0;
+        distribution[u] = 0;
     }
+    distribution[n] = 0;
     for (int u = 0; u < n; ++u) {
         int now = u;
         while (p[now] != now) {
@@ -16,14 +19,18 @@ void putCCNumAndSize(int n, int *p) {
     for (int i = 0; i < n; ++i) {
         if (size[i] > 0) {
             num++;
+            distribution[size[i]]++;
         }
     }
-    std::sort(size, size + n);
-    if (num % 2 != 0) {
-        std::cout << "Medium CC size: " << size[n - ((num + 1) / 2)] << "; CC num: " << num << std::endl;
-    } else {
-        std::cout << "Medium CC size: " << double(size[n - num / 2] + size[n - num / 2 - 1]) / 2 << "; CC num: " << num << std::endl;
+    std::cout << "CC num: " << num << std::endl;
+    std::cout << "CC distribution: " << std::endl;
+    for (int i = 1; i <= n; ++i) {
+        if (distribution[i] > 0) {
+            std::cout << "  " << i << ": " << distribution[i] << std::endl;
+        }
     }
+    delete [] size;
+    delete [] distribution;
 }
 
 void putProcess(double procedure, unsigned long long time_used) {
