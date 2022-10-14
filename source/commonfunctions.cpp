@@ -20,9 +20,9 @@ void putCCNumAndSize(int n, int *p) {
     }
     std::sort(size, size + n);
     if (num % 2 != 0) {
-        std::cout << "Medium CC size: " << size[n - ((num + 1) / 2)] << "; Nontrivial CC num: " << num << std::endl;
+        std::cout << "Medium CC size: " << size[n - ((num + 1) / 2)] << "; CC num: " << num << std::endl;
     } else {
-        std::cout << "Medium CC size: " << double(size[n - num / 2] + size[n - num / 2 - 1]) / 2 << "; Nontrivial CC num: " << num << std::endl;
+        std::cout << "Medium CC size: " << double(size[n - num / 2] + size[n - num / 2 - 1]) / 2 << "; CC num: " << num << std::endl;
     }
 }
 
