@@ -24,4 +24,6 @@ sh run.sh $1
 
 where ``$1`` is ``Online``, ``Baseline``, ``OBaseline``, ``Kruskal`` or ``DKruskal``, indicating which solution to use.
 
+The ``Online`` option corresponds to the online algorithm in the paper; the ``Baseline`` option corresponds to U-baseline-index in the paper; the ``DKruskal`` option corresponds to TSF-index in the paper.
+
 The output is in the file ``output.txt``.
