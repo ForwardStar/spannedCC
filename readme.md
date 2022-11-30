@@ -1,29 +1,27 @@
-## Finding Spanned Connected Component in Temporal Graphs
+## Span-CC Solutions
 
-A fast, elegant index structure to find all spanned connected components in a temporal graph.
+The repository includes three solutions to solve the span-CC queries: ``U-online``, ``U-baseline`` and ``TSF-index``.
 
 How to use it:
 
-- Write your graph data into ``graph.txt``; it contains info about all edges with the format ``(u, v, t)``; you can use the ``graph-gen.sh`` to generate graph data automatically:
+- Run ``graph-gen.sh`` to generate graph data automatically, which would download datasets and process the data into ``graph.txt``:
 
 ```sh
 sh graph-gen.sh
 ```
 
-- Write your query data into ``query.txt``; it contains info about queries with the format ``[ts, te]``; you can use ``query-gen.sh`` to generate query data automatically:
+- Run ``query-gen.sh`` to generate query data automatically, which would write queries into ``query.txt``:
 
 ```sh
 sh query-gen.sh
 ```
 
-- Run the following command:
+- Run the following command to run the solutions:
 
 ```sh
 sh run.sh $1
 ```
 
-where ``$1`` is ``Online``, ``Baseline``, ``OBaseline``, ``Kruskal`` or ``DKruskal``, indicating which solution to use.
-
-The ``Online`` option corresponds to the online algorithm in the paper; the ``Baseline`` option corresponds to U-baseline-index in the paper; the ``DKruskal`` option corresponds to TSF-index in the paper.
+where ``$1`` is ``Online``, ``Baseline``, or ``DKruskal``, corresponding to ``U-online``, ``U-baseline``, ``TSF-index`` solutions, respectively.
 
 The output is in the file ``output.txt``.
