@@ -2,7 +2,7 @@
 
 The repository includes three solutions to solve the span-CC queries: ``U-online``, ``U-baseline`` and ``TSF-index``.
 
-How to use it:
+How to use it (you need to run the scripts on a Linux platform):
 
 - Run ``graph-gen.sh`` to generate graph data automatically, which would download datasets and process the data into ``graph.txt``:
 
