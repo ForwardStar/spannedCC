@@ -70,6 +70,9 @@ class TemporalGraph {
         // shrink_to_fit(): minimize the edge set.
         void shrink_to_fit();
 
+        // size(): return the size (in bytes) of the graph.
+        int size();
+
         TemporalGraph() {}
         TemporalGraph(char *graph_file, char *graph_type, double factor);
         TemporalGraph(TemporalGraph * Graph, int ts, int te);
