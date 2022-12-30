@@ -22,6 +22,6 @@ sh query-gen.sh
 sh run.sh $1
 ```
 
-where ``$1`` is ``Online``, ``Baseline``, or ``DKruskal``, corresponding to ``U-online``, ``U-baseline``, ``TSF-index`` solutions, respectively.
+where ``$1`` is ``Online``, ``Baseline``, or ``TSF``, corresponding to ``U-online``, ``U-baseline``, ``TSF-index`` solutions, respectively.
 
 The output is in the file ``output.txt``.

@@ -91,8 +91,8 @@ int main(int argc, char * argv[]) {
         std::cout << "Kruskal reconstruction tree completed!" << std::endl;
     }
 
-    if (std::strcmp(argv[4], "DKruskal") == 0) {
-        std::cout << "Running differential kruskal reconstruction tree..." << std::endl;
+    if (std::strcmp(argv[4], "TSF") == 0) {
+        std::cout << "Running TSF-index..." << std::endl;
         std::cout << "Constructing the index structure..." << std::endl;
         unsigned long long index_construction_start_time = currentTime();
         DifferentialKruskal *Index = new DifferentialKruskal(Graph);
@@ -105,7 +105,7 @@ int main(int argc, char * argv[]) {
         differential_kruskal(Index, vertex_num, argv[2], argv[3]);
         unsigned long long query_end_time = currentTime();
         std::cout << "Query completed in " << timeFormatting(query_end_time - query_start_time).str() << std::endl;
-        std::cout << "Differential kruskal reconstruction tree completed!" << std::endl;
+        std::cout << "TSF-index completed!" << std::endl;
     }
 
     unsigned long long end_time = currentTime();
