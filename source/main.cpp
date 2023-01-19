@@ -47,7 +47,7 @@ int main(int argc, char * argv[]) {
         std::cout << "Running baseline..." << std::endl;
         std::cout << "Constructing the index structure..." << std::endl;
         unsigned long long index_construction_start_time = currentTime();
-        BaselineIndex *Index = new BaselineIndex(Graph);
+        BaselineIndex *Index = new BaselineIndex(Graph, 1);
         unsigned long long index_construction_end_time = currentTime();
         std::cout << "Index construction completed in " << timeFormatting(difftime(index_construction_end_time, index_construction_start_time)).str() << std::endl;
         std::cout << "Index cost " << Index->size() << " bytes" << std::endl;
@@ -98,7 +98,7 @@ int main(int argc, char * argv[]) {
         std::cout << "Running TSF-index..." << std::endl;
         std::cout << "Constructing the index structure..." << std::endl;
         unsigned long long index_construction_start_time = currentTime();
-        DifferentialKruskal *Index = new DifferentialKruskal(Graph);
+        DifferentialKruskal *Index = new DifferentialKruskal(Graph, 1);
         unsigned long long index_construction_end_time = currentTime();
         std::cout << "Index construction completed in " << timeFormatting(difftime(index_construction_end_time, index_construction_start_time)).str() << std::endl;
         std::cout << "Index cost " << Index->size() << " bytes" << std::endl;

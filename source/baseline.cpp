@@ -7,14 +7,12 @@ bool BaselineIndex::add(int ts, int u, int t) {
         L[ts][u].push_back(u);
         S[ts][u].push_back(std::vector<int>());
         S[ts][u][0].push_back(u);
-        Ssize[u].push_back(1);
         return true;
     }
     else if (T[ts][u][T[ts][u].size() - 1] < t) {
         T[ts][u].push_back(t);
         L[ts][u].push_back(L[ts][u][L[ts][u].size() - 1]);
         S[ts][u].push_back(std::vector<int>());
-        Ssize[u].push_back(Ssize[u][Ssize[u].size() - 1]);
         return true;
     }
 
@@ -48,12 +46,11 @@ void BaselineIndex::unioN(int ts, int u, int v, int t) {
     add(ts, mount_v, t);
 
     // Merge the smaller connected component into the larger one.
-    if (Ssize[mount_u][Ssize[mount_u].size() - 1] < Ssize[mount_v][Ssize[mount_v].size() - 1]) {
+    if (Ssize[mount_u] < Ssize[mount_v]) {
         std::swap(u, v);
         std::swap(mount_u, mount_v);
     }
-    Ssize[mount_u][Ssize[mount_u].size() - 1] += Ssize[mount_v][Ssize[mount_v].size() - 1];
-    Ssize[mount_v][Ssize[mount_v].size() - 1] = 0;
+    Ssize[mount_u] += Ssize[mount_v];
 
     std::vector<std::vector<int>>::iterator it;
     std::vector<int>::iterator it1;
@@ -133,30 +130,58 @@ std::stringstream BaselineIndex::solve(int n, int ts, int te) {
 
 }
 
-BaselineIndex::BaselineIndex(TemporalGraph * Graph) {
-    
-    unsigned long long start_time = currentTime();
-    n = Graph->numOfVertices();
-    m = Graph->numOfEdges();
-    tmax = Graph->tmax;
-    T = new std::vector<int> *[tmax + 1]();
-    L = new std::vector<int> *[tmax + 1]();
-    Ssize = new std::vector<int>[n]();
-    S = new std::vector<std::vector<int>> *[tmax + 1]();
+void BaselineIndex::update(TemporalGraph * Graph) {
+    Ssize = new int[n];
+
     for (int ts = 0; ts <= tmax; ++ts) {
-        T[ts] = new std::vector<int>[n]();
-        L[ts] = new std::vector<int>[n]();
-        S[ts] = new std::vector<std::vector<int>>[n]();
-        for (int te = ts; te <= tmax; ++te) {
+        if (ts > t1) {
+            T[ts] = new std::vector<int>[n]();
+            L[ts] = new std::vector<int>[n]();
+            S[ts] = new std::vector<std::vector<int>>[n]();
+        }
+        for (int u = 0; u < Graph->numOfVertices(); ++u) {
+            if (L[ts][u].size() == 0) {
+                Ssize[u] = 1;
+            } else {
+                Ssize[L[ts][u][L[ts][u].size() - 1]] = 1;
+            }
+        }
+        for (int te = (ts <= t1 ? t1 + 1 : 0); te <= tmax; ++te) {
             std::vector<std::pair<int, int>>::iterator it;
             for (it = Graph->temporal_edge[te].begin(); it != Graph->temporal_edge[te].end(); it++) {
                 unioN(ts, it->first, it->second, te);
             }
         }
+    }
+
+    delete Ssize;
+}
+
+BaselineIndex::BaselineIndex(TemporalGraph * Graph, double t_fraction) {
+    
+    unsigned long long start_time = currentTime();
+    n = Graph->numOfVertices();
+    m = Graph->numOfEdges();
+    tmax = Graph->tmax;
+    t1 = int(tmax * t_fraction);
+    T = new std::vector<int> *[tmax + 1]();
+    L = new std::vector<int> *[tmax + 1]();
+    Ssize = new int[n];
+    S = new std::vector<std::vector<int>> *[tmax + 1]();
+    for (int ts = 0; ts <= t1; ++ts) {
         for (int u = 0; u < Graph->numOfVertices(); ++u) {
-            Ssize[u].clear();
+            Ssize[u] = 1;
         }
-        putProcess(double(ts) / tmax, currentTime() - start_time);
+        T[ts] = new std::vector<int>[n]();
+        L[ts] = new std::vector<int>[n]();
+        S[ts] = new std::vector<std::vector<int>>[n]();
+        for (int te = ts; te <= t1; ++te) {
+            std::vector<std::pair<int, int>>::iterator it;
+            for (it = Graph->temporal_edge[te].begin(); it != Graph->temporal_edge[te].end(); it++) {
+                unioN(ts, it->first, it->second, te);
+            }
+        }
+        putProcess(double(ts) / t1, currentTime() - start_time);
     }
 
     delete [] Ssize;
