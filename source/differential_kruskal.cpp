@@ -155,7 +155,7 @@ void DifferentialKruskal::update(TemporalGraph * Graph) {
             parent[u] = u;
         }
         construct_disjoint_set(this, parent, ts);
-        for (int te = (ts <= t1 ? t1 + 1 : 0); te <= tmax; ++te) {
+        for (int te = std::max(ts, t1 + 1); te <= tmax; ++te) {
             std::vector<std::pair<int, int>>::iterator it;
             for (it = Graph->temporal_edge[te].begin(); it != Graph->temporal_edge[te].end(); ++it) {
                 if (unioN(parent, it->first, it->second)) {

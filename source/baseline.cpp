@@ -146,7 +146,7 @@ void BaselineIndex::update(TemporalGraph * Graph) {
                 Ssize[L[ts][u][L[ts][u].size() - 1]] = 1;
             }
         }
-        for (int te = (ts <= t1 ? t1 + 1 : 0); te <= tmax; ++te) {
+        for (int te = std::max(ts, t1 + 1); te <= tmax; ++te) {
             std::vector<std::pair<int, int>>::iterator it;
             for (it = Graph->temporal_edge[te].begin(); it != Graph->temporal_edge[te].end(); it++) {
                 unioN(ts, it->first, it->second, te);
