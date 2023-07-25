@@ -39,6 +39,18 @@ where ``$1`` corresponds to the solution (``Baseline`` or ``TSF``).
 
 Then input the fraction of timestamps to update. For example, if the fraction is ``0.2``, the program would firstly construct an index with edges in ``[0, 0.8*tmax]``. When the index construction is finished, it starts to update the index with remaining edges in ``[0.8*tmax, tmax]``.
 
+## Index scalability test (Subgraph construction)
+
+Build different sizes of subgraphs to test the scalability of indices:
+
+```sh
+sh run.sh $1 subgraph
+```
+
+where ``$1`` corresponds to the solution (``Baseline`` or ``TSF``).
+
+Then input the fraction of timestamps in the subgraph. For example, if the fraction is ``0.8``, then the constructed temporal graph would only involve edges in ``[0, 0.8*tmax]``.
+
 ## Environment
 - System: ``ubuntu-20.04.1``
 - Compiler: ``gcc (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0``
@@ -92,6 +104,35 @@ Running online search...
 Average: 3280μs (0s)
 Online search completed in 3280614μs (3s)
 Program finished in 3296669μs (3s)
+```
+
+``Table 4`` shows the scalability of indices. For example, to test the scalability with ``f=0.25`` of ``U-baseline`` index under the ``CT (contact)`` dataset:
+```sh
+> sh graph-gen.sh
+Extracting datasets... done
+Datasets:
+0. naive
+1. contact
+2. mit
+3. facebook-wosn-links
+4. youtube-u-growth
+5. wikipedia-growth
+6. dblp_coauthor
+Select a graph dataset (0-6): 1
+Copying dataset to "graph.txt"... done
+Normalizing the graph... done
+> sh run.sh Baseline subgraph
+Compiling...
+make: 'main' is up to date.
+Running...
+Subgraph mode enabled. Please input the fraction of timestamps in the subgraph (0 < x < 1): 0.25
+Building graph...
+Build graph success in 15084μs (0s)
+n = 275, m = 28244, tmax = 3915, size = 225952 bytes
+Running baseline...
+Constructing the index structure...
+Index construction completed in 319360μs (0s)
+Index cost 5277312 bytes
 ```
 
 ``Table 5`` shows the average index update time of each edge in ``[0.8*tmax, tmax]``. For example, to test the average index update time of ``U-baseline`` index under the ``CT (contact)`` dataset:

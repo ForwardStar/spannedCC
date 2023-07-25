@@ -8,11 +8,11 @@
 
 bool debug = false;
 
-TemporalGraph * build(char * argv[]) {
+TemporalGraph * build(char * argv[], double subgraph_fraction) {
 
     std::cout << "Building graph..." << std::endl;
     unsigned long long build_graph_start_time = currentTime();
-    TemporalGraph * Graph = new TemporalGraph(argv[1], (char *)"Undirected", 1);
+    TemporalGraph * Graph = new TemporalGraph(argv[1], (char *)"Undirected", subgraph_fraction);
     unsigned long long build_graph_end_time = currentTime();
     std::cout << "Build graph success in " << timeFormatting(difftime(build_graph_end_time, build_graph_start_time)).str() << std::endl;
     std::cout << "n = " << Graph->numOfVertices() << ", m = " << Graph->numOfEdges() << ", tmax = " << Graph->tmax << ", size = " << Graph->size() << " bytes" << std::endl;
@@ -27,6 +27,7 @@ int main(int argc, char * argv[]) {
     unsigned long long start_time = currentTime();
 
     double update_fraction = 0.0;
+    double subgraph_fraction = 1.0;
 
     if (std::strcmp(argv[argc - 1], "Debug") == 0) {
         debug = true;
@@ -39,11 +40,17 @@ int main(int argc, char * argv[]) {
         argc--;
     }
 
+    if (argc == 6 && std::strcmp(argv[argc - 1], "subgraph") == 0) {
+        std::cout << "Subgraph mode enabled. Please input the fraction of timestamps in the subgraph (0 < x < 1): ";
+        std::cin >> subgraph_fraction;
+        argc--;
+    }
+
     if (argc != 5) {
         std::cout << "Parameters are non-standard. Please check the readme file." << std::endl;
     }
 
-    TemporalGraph * Graph = build(argv);
+    TemporalGraph * Graph = build(argv, subgraph_fraction);
     Graph->shrink_to_fit();
     int vertex_num = Graph->numOfVertices();
 
