@@ -201,14 +201,7 @@ DifferentialKruskal::DifferentialKruskal(TemporalGraph * Graph, double t_fractio
                     relation[ts][relation[ts].size() - 1].push_back(*it);
                 }
             }
-            // int idx = actual_start_time.size() - 1;
-            // if (actual_time[idx].size() > 0 && actual_time[idx][actual_time[idx].size() - 1] == te) {
-            //     relation[idx][relation[idx].size() - 1].shrink_to_fit();
-            // }
         }
-        // int idx = actual_start_time.size() - 1;
-        // actual_time[idx].shrink_to_fit();
-        // relation[idx].shrink_to_fit();
         putProcess(double(ts) / t1, currentTime() - start_time);
     }
 
