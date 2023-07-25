@@ -53,7 +53,7 @@ Then input the fraction of timestamps in the subgraph. For example, if the fract
 
 ## Environment
 - System: ``ubuntu-20.04.1``
-- Compiler: ``gcc (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0``
+- Compiler: ``gcc (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0``, ``Python 3.8.8`` (>= 3.5) with packages ``tqdm`` and ``pathlib``
 - Memory: ``128G``
 - CPU: ``Intel(R) Xeon(R) Silver 4210R CPU @ 2.40GHz``
 
