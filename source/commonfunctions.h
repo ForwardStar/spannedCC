@@ -2,6 +2,7 @@
 #define COMMONFUNCTIONS
 
 #include <ctime>
+#include <chrono>
 #include <iomanip>
 #include <iostream>
 #include <fstream>
@@ -15,8 +16,12 @@
 #include <unordered_set>
 #include <queue>
 
-void putProcess(double procedure, int time_used);
+void putCCNumAndSize(int n, int *p);
 
-std::stringstream timeFormatting(int seconds);
+void putProcess(double procedure, unsigned long long time_used);
+
+std::stringstream timeFormatting(unsigned long long seconds);
+
+unsigned long long currentTime();
 
 #endif

@@ -187,14 +187,19 @@ void TemporalGraph::shrink_to_fit() {
 
 }
 
-TemporalGraph::TemporalGraph(char *graph_file, char *graph_type) {
+int TemporalGraph::size() {
+    // Each edge consumes 8 bytes for 2 ints.
+    return 8 * m;
+}
+
+TemporalGraph::TemporalGraph(char *graph_file, char *graph_type, double factor) {
 
     int u, v, t;
     std::ifstream fin(graph_file);
 
     is_directed = std::strcmp(graph_type, "Directed") == 0;
     is_general = 1;
-    n = 0;
+
     while (fin >> u >> v >> t) {
         n = std::max(n, std::max(u, v));
         ++m;
@@ -206,6 +211,7 @@ TemporalGraph::TemporalGraph(char *graph_file, char *graph_type) {
     }
     ++n;
     
+    tmax *= factor;
 }
 
 TemporalGraph::TemporalGraph(TemporalGraph * Graph, int ts, int te) {

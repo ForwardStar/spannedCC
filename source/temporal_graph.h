@@ -31,10 +31,10 @@ class TemporalGraph {
         };
 
         // n: the number of vertices; m: the number of edges.
-        int n=0, m=0;
+        int n, m;
 
         // tmax: the maximum time of all temporal edges.
-        int tmax=0;
+        int tmax;
 
         // head_edge[vertex] --> the head edge from this vertex.
         std::vector<Edge *> head_edge;
@@ -70,8 +70,11 @@ class TemporalGraph {
         // shrink_to_fit(): minimize the edge set.
         void shrink_to_fit();
 
+        // size(): return the size (in bytes) of the graph.
+        int size();
+
         TemporalGraph() {}
-        TemporalGraph(char *graph_file, char *graph_type);
+        TemporalGraph(char *graph_file, char *graph_type, double factor);
         TemporalGraph(TemporalGraph * Graph, int ts, int te);
         ~TemporalGraph();
 

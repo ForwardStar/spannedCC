@@ -1,7 +1,8 @@
-#include"commonfunctions.h"
-#include"temporal_graph.h"
+#include "commonfunctions.h"
+#include "temporal_graph.h"
 
-class OptimizedBaseline{
+class OptimizedBaseline {
+
     private:
 
         bool add(int ts, int u, int t);
@@ -10,7 +11,7 @@ class OptimizedBaseline{
 
         void optimized_unioN(int ts, int u, int v, int t);
 
-        int binarysearch(int ts, int u, int t);
+        int binarySearch(int ts, int u, int t);
 
     public:
 
@@ -25,6 +26,7 @@ class OptimizedBaseline{
         OptimizedBaseline() {}
         OptimizedBaseline(TemporalGraph * Graph);
         ~OptimizedBaseline();
+
 };
 
-void OBaseline(OptimizedBaseline * Index, int vertex_num, char * query_file, char * output_file);
+void optimized_baseline(OptimizedBaseline * Index, int vertex_num, char * query_file, char * output_file);

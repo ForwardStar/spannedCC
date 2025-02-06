@@ -26,7 +26,7 @@ bool unioN(int * parent, int u, int v) {
 
 void construct_disjoint_set(DifferentialKruskal * Index, int * parent, int ts) {
 
-    for (int t = 0; t < ts; ++t) {
+    for (int t = 0; t <= ts; ++t) {
         for (int i = Index->actual_time[t].size() - 1; i >= 0; --i) {
             if (Index->actual_time[t][i] < ts) {
                 break;
@@ -147,25 +147,50 @@ std::stringstream DifferentialKruskal::solve(int n, int ts, int te) {
 
 }
 
-DifferentialKruskal::DifferentialKruskal(TemporalGraph * Graph) {
-
-    int start_time = time(NULL);
-
-    n = Graph->numOfVertices();
-    m = Graph->numOfEdges();
-    tmax = Graph->tmax;
-
-    relation = new std::vector<std::vector<std::pair<int, int>>>[tmax + 1]();
-    actual_time = new std::vector<int>[tmax + 1]();
-
+void DifferentialKruskal::update(TemporalGraph * Graph) {
     int *parent = new int[n];
-    
+
     for (int ts = 0; ts <= tmax; ++ts) {
         for (int u = 0; u < n; ++u) {
             parent[u] = u;
         }
         construct_disjoint_set(this, parent, ts);
-        for (int te = ts; te <= tmax; ++te) {
+        for (int te = std::max(ts, t1 + 1); te <= tmax; ++te) {
+            std::vector<std::pair<int, int>>::iterator it;
+            for (it = Graph->temporal_edge[te].begin(); it != Graph->temporal_edge[te].end(); ++it) {
+                if (unioN(parent, it->first, it->second)) {
+                    if (actual_time[ts].size() == 0 || actual_time[ts][actual_time[ts].size() - 1] != te) {
+                        actual_time[ts].push_back(te);
+                        relation[ts].push_back(std::vector<std::pair<int, int>>());
+                    }
+                    relation[ts][relation[ts].size() - 1].push_back(*it);
+                }
+            }
+        }
+    }
+
+    delete [] parent;
+}
+
+DifferentialKruskal::DifferentialKruskal(TemporalGraph * Graph, double t_fraction) {
+
+    unsigned long long start_time = currentTime();
+
+    n = Graph->numOfVertices();
+    m = Graph->numOfEdges();
+    tmax = Graph->tmax;
+    t1 = int(tmax * t_fraction);
+
+    relation = new std::vector<std::vector<std::pair<int, int>>>[tmax + 1];
+    actual_time = new std::vector<int>[tmax + 1];
+    int *parent = new int[n];
+    
+    for (int ts = 0; ts <= t1; ++ts) {
+        for (int u = 0; u < n; ++u) {
+            parent[u] = u;
+        }
+        construct_disjoint_set(this, parent, ts);
+        for (int te = ts; te <= t1; ++te) {
             std::vector<std::pair<int, int>>::iterator it;
             for (it = Graph->temporal_edge[te].begin(); it != Graph->temporal_edge[te].end(); it++) {
                 if (unioN(parent, it->first, it->second)) {
@@ -176,23 +201,25 @@ DifferentialKruskal::DifferentialKruskal(TemporalGraph * Graph) {
                     relation[ts][relation[ts].size() - 1].push_back(*it);
                 }
             }
-            if (actual_time[ts].size() > 0 && actual_time[ts][actual_time[ts].size() - 1] == te) {
-                relation[ts][relation[ts].size() - 1].shrink_to_fit();
-            }
         }
-        actual_time[ts].shrink_to_fit();
-        relation[ts].shrink_to_fit();
-        //putProcess(double(ts) / tmax, difftime(time(NULL), start_time));
+        putProcess(double(ts) / t1, currentTime() - start_time);
     }
 
     delete [] parent;
 
 }
 
-DifferentialKruskal::~DifferentialKruskal() {
-
-    delete [] relation;
-    delete [] actual_time;
+unsigned long long DifferentialKruskal::size() {
+    
+    unsigned long long memory = 0;
+    for (int t = 0; t <= tmax; ++t) {
+        std::vector<std::vector<std::pair<int, int>>>::iterator it;
+        for (it = relation[t].begin(); it != relation[t].end(); it++) {
+            memory += it->size();
+        }
+    }
+    memory*= 12;
+    return memory;
 
 }
 
@@ -210,11 +237,11 @@ void differential_kruskal(DifferentialKruskal * Index, int vertex_num, char * qu
     fin = std::ifstream(query_file);
 
     int i = 0;
-    int start_time = time(NULL);
+    unsigned long long start_time = currentTime();
     while (fin >> ts >> te) {
         fout << Index->solve(vertex_num, ts, te).str() << std::endl;
-        putProcess(double(++i) / query_num, difftime(time(NULL), start_time));
+        putProcess(double(++i) / query_num, currentTime() - start_time);
     }
 
-    std::cout << "Average (per query): " << timeFormatting(difftime(time(NULL), start_time) / query_num).str() << std::endl;
+    std::cout << "Average (per query): " << timeFormatting(double(currentTime() - start_time) / query_num).str() << std::endl;
 }

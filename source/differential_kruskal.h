@@ -10,7 +10,7 @@ class DifferentialKruskal {
     public:
 
         // n, m, tmax: graph information.
-        int n, m, tmax;
+        int n, m, tmax, t1;
         
         // each relation[t][t'][i] represents an edge.
         std::vector<std::vector<std::pair<int, int>>> *relation;
@@ -18,9 +18,13 @@ class DifferentialKruskal {
 
         std::stringstream solve(int n, int ts, int te);
 
+        void update(TemporalGraph * Graph);
+
         DifferentialKruskal() {}
-        DifferentialKruskal(TemporalGraph * Graph);
-        ~DifferentialKruskal();
+        DifferentialKruskal(TemporalGraph * Graph, double t_fraction);
+        ~DifferentialKruskal() {};
+
+        unsigned long long size();
 
 };
 
