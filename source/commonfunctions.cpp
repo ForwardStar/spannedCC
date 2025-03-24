@@ -37,7 +37,7 @@ void putCCNumAndSize(int n, int *p) {
 
 void putProcess(double procedure, unsigned long long time_used) {
 
-    //if (debug) 
+    if (debug) 
     {
         std::cout << std::fixed << std::setprecision(3) << "Processing: " << procedure * 100 << "%" \
             << "\t\tTime: " << timeFormatting(time_used).str() \

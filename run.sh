@@ -11,5 +11,7 @@ else
     ./main graph.txt query.txt output_online.txt Online > log_online.txt
     ./main graph.txt query.txt output_baseline.txt Baseline > log_baseline.txt
     ./main graph.txt query.txt output_TSF.txt TSF > log_TSF.txt
-    ./main graph.txt query.txt output_LCTc.txt LCTc > log_LCTc.txt
+    ./main graph.txt query.txt output_TSF_basic.txt TSF-basic > log_TSF_basic.txt
+    ./main graph.txt query.txt output_TSF_PST.txt TSF-PST > log_TSF_PST.txt
+    ./main graph.txt query.txt output_TSF_MSF.txt TSF-MSF > log_TSF_MSF.txt
 fi

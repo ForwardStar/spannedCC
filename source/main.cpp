@@ -133,7 +133,7 @@ int main(int argc, char * argv[]) {
         std::cout << "TSF-index completed!" << std::endl;
     }
 
-    if (std::strcmp(argv[argc - 1], "CTSF") == 0) {
+    if (std::strcmp(argv[argc - 1], "TSF-basic") == 0) {
         std::cout << "Running Compressed TSF-index..." << std::endl;
         std::cout << "Constructing the index structure..." << std::endl;
         unsigned long long index_construction_start_time = currentTime();
@@ -197,8 +197,8 @@ int main(int argc, char * argv[]) {
         std::cout << "Compressed TSF-index completed!" << std::endl;
     }
 
-    if (std::strcmp(argv[argc - 1], "LCTc") == 0) {
-        std::cout << "Running TSF-chunk-index..." << std::endl;
+    if (std::strcmp(argv[argc - 1], "TSF-MSF") == 0) {
+        std::cout << "Running TSF-index with TSF-construct-MSF algorithm..." << std::endl;
         std::cout << "Constructing the index structure..." << std::endl;
         unsigned long long index_construction_start_time = currentTime();
         LCTchunk *Index = new LCTchunk(Graph, 1 - update_fraction);
@@ -229,7 +229,7 @@ int main(int argc, char * argv[]) {
         std::cout << "Chunk TSF-index completed!" << std::endl;
     }
 
-    if (std::strcmp(argv[argc - 1], "LCTp") == 0) {
+    if (std::strcmp(argv[argc - 1], "TSF-PST") == 0) {
         std::cout << "Running TSF-prt-index..." << std::endl;
         std::cout << "Constructing the index structure..." << std::endl;
         unsigned long long index_construction_start_time = currentTime();
