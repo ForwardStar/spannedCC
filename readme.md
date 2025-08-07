@@ -1,6 +1,8 @@
 ## Window-CC solutions
 
-This is one of the code repositories of the paper [``On Querying Connected Components in Large Temporal Graphs``](https://dl.acm.org/doi/10.1145/3589315) (SIGMOD 2023).
+**2025/08 update: We updated several faster index construction and query algorithms (TSF-PST, TSF-MSF, etc.) for journal extension. To evaluate the algorithms for the conference version, use the commit ``41a29303d4ec67365d87f04751b880757c699e33``.**
+
+This is one of the code repositories of the paper [``On Querying Connected Components in Large Temporal Graphs``](https://dl.acm.org/doi/10.1145/3589315) (SIGMOD 2023) for window-CC solutions for undirected graphs. The window-SCC solutions for directed graphs are in [another repository](https://github.com/ForwardStar/spannedSCC).
 
 The repository includes three solutions to solve the window-CC queries: ``U-online``, ``U-baseline`` and ``TSF-index``.
 
