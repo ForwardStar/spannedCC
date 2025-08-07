@@ -218,7 +218,7 @@ unsigned long long DifferentialKruskal::size() {
             memory += it->size();
         }
     }
-    memory*= 12;
+    memory *= 12;
     return memory;
 
 }

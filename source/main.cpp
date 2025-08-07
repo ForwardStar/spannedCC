@@ -55,9 +55,8 @@ int main(int argc, char * argv[]) {
     }
 
     TemporalGraph * Graph = build(argv, subgraph_fraction);
-    //Graph->shrink_to_fit();
+    // Graph->shrink_to_fit();
     int vertex_num = Graph->numOfVertices();
-    //std::cout<<argv[argc - 1]<<std::endl;
     if (std::strcmp(argv[argc - 1], "Online") == 0) {
         for (int i = 2; i < argc - 2; i++) {
             std::cout << "Running online search..." << std::endl;
@@ -121,7 +120,7 @@ int main(int argc, char * argv[]) {
             unsigned long long index_update_end_time = currentTime();
             std::cout << "Index update completed in " << timeFormatting(difftime(index_update_end_time, index_update_start_time)).str() << std::endl;
         }
-        //std::cout << "Index cost " << Index->size() << " bytes" << std::endl;
+        // std::cout << "Index cost " << Index->size() << " bytes" << std::endl;
         delete Graph;
         for (int i = 2; i < argc - 2; i++) {
             std::cout << "Solving queries..." << std::endl;
@@ -153,7 +152,7 @@ int main(int argc, char * argv[]) {
         //     unsigned long long index_update_end_time = currentTime();
         //     std::cout << "Index update completed in " << timeFormatting(difftime(index_update_end_time, index_update_start_time)).str() << std::endl;
         // }
-        //std::cout << "Index cost " << Index->size() << " bytes" << std::endl;
+        // std::cout << "Index cost " << Index->size() << " bytes" << std::endl;
         delete Graph;
         for (int i = 2; i < argc - 2; i++) {
             std::cout << "Solving queries..." << std::endl;
