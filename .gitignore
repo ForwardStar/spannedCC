@@ -2,3 +2,4 @@ datasets
 *.txt
 *.o
 main
+results

@@ -24,9 +24,11 @@ sh query-gen.sh
 sh run.sh $1
 ```
 
-where ``$1`` is ``Online``, ``Baseline``, or ``TSF``, corresponding to ``U-online``, ``U-baseline``, ``TSF-index`` solutions, respectively.
+where ``$1`` is ``Online``, ``Baseline``, ``TSF-basic``,  ``TSF-PST`` or ``TSF-MSF``, corresponding to ``U-online``, ``U-baseline``, ``TSF-construct``, ``TSF-construct-MSF + PST-query`` and ``TSF-construct-MSF + TSF-query`` solutions, respectively.
 
 The output is in the file ``output.txt``.
+
+Alternatively, run ``sh run-all.sh`` to evaluate all solutions on all datasets directly.
 
 ## Index update
 
@@ -181,7 +183,7 @@ This may be caused by several reasons:
 Possible solutions: check whether your Python interpreter is installed correctly, and is newer than version 3.5; run the aforementioned command again; or install the dependencies manually by:
 
 ```sh
-pip install tqdm pathlib
+pip install tqdm pathlib zstandard
 ```
 
 (2) User's Internet condition is poor and fails to download the datasets from KONECT and SNAP websites;
@@ -192,8 +194,8 @@ Possible solutions: check your Internet; run the aforementioned command again; o
 mkdir datasets
 cd datasets
 wget -c "http://konect.cc/files/download.tsv.contact.tar.bz2"
-wget -c "http://konect.cc/files/download.tsv.mit.tar.bz2"
-wget -c "http://konect.cc/files/download.tsv.dblp_coauthor.tar.bz2"
+wget -c "https://datasets.ldbcouncil.org/graphalytics/graph500-23.tar.zst"
+wget -c "https://snap.stanford.edu/data/sx-stackoverflow.txt.gz"
 wget -c "http://konect.cc/files/download.tsv.facebook-wosn-links.tar.bz2"
 wget -c "http://konect.cc/files/download.tsv.youtube-u-growth.tar.bz2"
 wget -c "http://konect.cc/files/download.tsv.wikipedia-growth.tar.bz2"

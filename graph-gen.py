@@ -2,6 +2,8 @@ import os
 import time
 import threading
 import tarfile
+import gzip
+import sys
 
 headers = {'User-Agent':'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6'}
 
@@ -9,11 +11,13 @@ def download(url, path):
     try:
         from pathlib import Path
         from tqdm import tqdm
+        import zstandard as zstd
     except:
         print("Installing dependencies...")
         from pip._internal import main
         main(['install', 'pathlib'])
         main(['install', 'tqdm'])
+        main(['install', 'zstandard'])
         from pathlib import Path
         from tqdm import tqdm
     from urllib.request import urlopen, Request
@@ -74,7 +78,10 @@ def takeThird(triple):
     return triple[2]
 
 def move_data_file(source, destination):
-    source = open(os.path.join(os.path.join('datasets', source), "out." + source), "r")
+    if os.path.isfile(os.path.join('datasets', source)):
+        source = open(os.path.join('datasets', source), "r")
+    else:
+        source = open(os.path.join(os.path.join('datasets', source), "out." + source), "r")
     lines = source.readlines()
     destination = open(destination, "w")
     destination.writelines(lines)
@@ -110,8 +117,8 @@ def normalize(filename):
 if __name__ == "__main__":
     # download datasets
     DATASETS_URL = ["http://konect.cc/files/download.tsv.contact.tar.bz2",
-                    "http://konect.cc/files/download.tsv.mit.tar.bz2",
-                    "http://konect.cc/files/download.tsv.dblp_coauthor.tar.bz2",
+                    "https://datasets.ldbcouncil.org/graphalytics/graph500-23.tar.zst",
+                    "https://snap.stanford.edu/data/sx-stackoverflow.txt.gz",
                     "http://konect.cc/files/download.tsv.facebook-wosn-links.tar.bz2",
                     "http://konect.cc/files/download.tsv.youtube-u-growth.tar.bz2",
                     "http://konect.cc/files/download.tsv.wikipedia-growth.tar.bz2"]
@@ -121,7 +128,7 @@ if __name__ == "__main__":
             os.mkdir("datasets")
         for url in DATASETS_URL:
             path = os.path.join("datasets", url.split('/')[-1])
-            if not os.path.exists(os.path.join("datasets", path.split('.')[2])):
+            if not os.path.exists(os.path.join("datasets", path.split('.')[2])) and not os.path.exists(os.path.join("datasets", path.split('.')[0])):
                 download(url, path)
 
     # extract all datasets
@@ -135,6 +142,60 @@ if __name__ == "__main__":
             archive = tarfile.open(os.path.join("datasets", file), "r:bz2")
             archive.extractall("datasets")
             os.remove(os.path.join("datasets", file))
+        if file.endswith(".txt.gz"):
+            archive = gzip.GzipFile(os.path.join("datasets", file))
+            out = open(os.path.join("datasets", file.split('.')[0]), "wb")
+            out.write(archive.read())
+            archive.close()
+            os.remove(os.path.join("datasets", file))
+            edges = []
+            timestamps = {}
+            cnt = 0
+            with open(os.path.join("datasets", file.split('.')[0]), "r") as f:
+                for line in f.readlines():
+                    u, v, t = line.split()
+                    u = int(u)
+                    v = int(v)
+                    t = int(t)
+                    if t not in timestamps:
+                        timestamps[t] = cnt
+                        cnt += 1
+                    edges.append(str(u) + " " + str(v) + " " + str(timestamps[t]) + "\n")
+            with open(os.path.join("datasets", file.split('.')[0]), "w") as f:
+                f.writelines(edges)
+        if file.endswith(".tar.zst"):
+            import zstandard as zstd
+            tar_file = os.path.join("datasets", file.replace(".zst", ""))
+            with open(os.path.join("datasets", file), "rb") as compressed, open(tar_file, "wb") as decompressed:
+                dctx = zstd.ZstdDecompressor()
+                dctx.copy_stream(compressed, decompressed)
+            with tarfile.open(tar_file, "r") as tar:
+                tar.extractall(path="datasets")
+            os.remove(tar_file)
+            os.remove(os.path.join("datasets", file))
+            vertex_map = {}
+            cnt = 0
+            with open(os.path.join("datasets", "graph500-23.v")) as f:
+                for line in f.readlines():
+                    vertex_map[int(line)] = cnt
+                    cnt += 1
+            for file in os.listdir("datasets"):
+                if file.startswith("graph500") and not file.endswith(".e"):
+                    os.remove(os.path.join("datasets", file))
+            edges = []
+            t = 0
+            with open(os.path.join("datasets", "graph500-23.e"), "r") as f:
+                for line in f.readlines():
+                    u, v = line.split()
+                    u = int(u)
+                    v = int(v)
+                    if u == v:
+                        continue
+                    edges.append(str(vertex_map[u]) + " " + str(vertex_map[v]) + " " + str(t // 19) + "\n")
+                    t += 1
+            with open(os.path.join("datasets", "graph500-23"), "w") as f:
+                f.writelines(edges)
+            os.remove(os.path.join("datasets", "graph500-23.e"))
     is_finished = True
     thread_extract_datasets.join()
 
@@ -150,7 +211,11 @@ if __name__ == "__main__":
     for file in file_ls:
         print(str(count) + ".", file)
         count += 1
-    user_input = input("Select a graph dataset (0-" + str(count - 1) + "): ")
+    user_input = None
+    if len(sys.argv) > 1:
+        user_input = sys.argv[len(sys.argv)-1]
+    else:
+        user_input = input("Select a graph dataset (0-" + str(count - 1) + "): ")
 
     # move data file
     if user_input.strip() in [str(i) for i in range(count)]:
